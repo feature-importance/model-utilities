@@ -6,7 +6,6 @@ build-backend = "setuptools.build_meta"
 name = "model-utilities"
 dynamic = ["version"]
 dependencies = [
-    "setuptools~=75.8.0",
     "torch~=2.6.0",
     "torchbearer~=0.5.5",
     "numpy~=2.2.2",
@@ -33,3 +32,6 @@ Homepage = "https://github.com/feature-importance/model-utilities"
 Documentation = "https://github.com/feature-importance/model-utilities"
 Repository = "https://github.com/feature-importance/model-utilities.git"
 "Bug Tracker" = "https://github.com/feature-importance/model-utilities/issues"
+
+[tool.setuptools.dynamic]
+version = {attr = "model_utilities.__version__"}
