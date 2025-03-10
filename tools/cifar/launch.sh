@@ -1,5 +1,5 @@
 #!/bin/bash -l
-#SBATCH -p swarm_h100,swarm_a100,a100,scavenger_mathsa100,scavenger_4a100
+#SBATCH -p swarm_h100,swarm_a100,a100,scavenger_mathsa100,swarm_l4,scavenger_4a100
 #SBATCH --mem=32G
 #SBATCH --gres=gpu:1
 #SBATCH --nodes=1
