@@ -140,12 +140,13 @@ def main():
     model_file = os.path.join(args.output_dir,
                               f"{args.model}-{args.dataset}",
                               "model.pt")
-    save_args(model_file.replace("model.pt", ""), "model-cmd.txt")
 
     fit_model(model, criterion, opt, train_data_loader, val_data_loader,
               epochs=args.epochs, device='auto', verbose=1, acc='acc',
               model_file=model_file, run_id=run_id, log_dir=args.log_dir,
               resume=args.resume, period=None, schedule=schedule)
+
+    save_args(model_file.replace("model.pt", ""), "model-cmd.txt")
 
 
 if __name__ == '__main__':
