@@ -3,11 +3,11 @@
 #SBATCH --mem=32G
 #SBATCH --gres=gpu:1
 #SBATCH --nodes=1
-#SBATCH -c 20
+#SBATCH -c 12
 #SBATCH --time=03:00:00
 
 module load conda/python3
 source activate torchwatcher
 
-python train.py --batch-size 128 --epochs 180 --lr "0.1*0.1@[90,140]" --log-dir ./output/logs --output-dir ./output "$@"
+python train.py -j 8 --batch-size 128 --epochs 180 --lr "0.1*0.1@[90,140]" --log-dir ./output/logs --output-dir ./output "$@"
 
