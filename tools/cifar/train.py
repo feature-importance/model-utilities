@@ -141,7 +141,8 @@ def main():
         extra_callbacks.append(CSVLogger(f"{args.output_dir}/log.csv"))
 
     model_file = os.path.join(args.output_dir,
-                              f"/{args.model}-{args.dataset}/model.pt")
+                              f"{args.model}-{args.dataset}",
+                              "model.pt")
 
     fit_model(model, criterion, opt, train_data_loader, val_data_loader,
               epochs=args.epochs, device='auto', verbose=2, acc='acc',
