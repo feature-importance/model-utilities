@@ -1,4 +1,5 @@
 import json
+import os
 import random
 import sys
 from datetime import datetime
@@ -7,9 +8,10 @@ import numpy as np
 import pandas as pd
 import torch
 import torchbearer
+from model_utilities.training.utils import save_model_info
 from torchbearer import Trial, Callback
 from torchbearer.callbacks import TensorBoard, TensorBoardText, MultiStepLR, \
-    TorchScheduler
+    TorchScheduler, CSVLogger
 
 FORCE_MPS = False
 
@@ -123,6 +125,12 @@ def fit_model(model, criterion, opt, trainloader, valloader, epochs=1000,
                     json.dump(myargs, fp)
 
         cb.extend([tboard, tboardtext, write_params])
+
+    # irrespective of tensorboard we log to csv, etc
+    log = model_file.replace('.pt', '-log.csv')
+    cb.append(CSVLogger(log))
+    save_model_info(model, os.path.dirname(model_file),
+                    os.path.basename(model_file)+"-info.txt")
 
     if extra_callbacks is not None:
         if not isinstance(extra_callbacks, (list, tuple)):

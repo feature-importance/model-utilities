@@ -11,6 +11,7 @@ from model_utilities.models.cifar_resnet import resnet18_3x3, resnet34_3x3, \
     resnet50_3x3, resnet101_3x3, resnet152_3x3
 from model_utilities.training.modelfitting import fit_model, set_seed, \
     get_device, parse_learning_rate_arg
+from model_utilities.training.utils import save_args
 from model_utilities.transforms._cifar_presets import \
     ImageClassificationTraining, ImageClassificationEval
 from torchbearer.callbacks import CSVLogger
@@ -109,7 +110,6 @@ def main():
     criterion = nn.CrossEntropyLoss()
 
     init_lr, schedule = parse_learning_rate_arg(args.lr)
-    print(schedule)
 
     opt = get_optimizer(args.opt,
                         filter(lambda p: p.requires_grad, model.parameters()),
@@ -137,19 +137,15 @@ def main():
 
     run_id = f"{args.model}-{args.dataset}-seed_{args.seed}"
 
-    extra_callbacks = []
-    if args.log_dir:
-        extra_callbacks.append(CSVLogger(f"{args.output_dir}/log.csv"))
-
     model_file = os.path.join(args.output_dir,
                               f"{args.model}-{args.dataset}",
                               "model.pt")
+    save_args(model_file.replace("model.pt", ""), "model-cmd.txt")
 
     fit_model(model, criterion, opt, train_data_loader, val_data_loader,
               epochs=args.epochs, device='auto', verbose=1, acc='acc',
               model_file=model_file, run_id=run_id, log_dir=args.log_dir,
-              resume=args.resume, extra_callbacks=extra_callbacks,
-              period=None, schedule=schedule)
+              resume=args.resume, period=None, schedule=schedule)
 
 
 if __name__ == '__main__':
