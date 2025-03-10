@@ -1,8 +1,6 @@
 from torch import nn
 from torchvision.models import (resnet18, resnet34, resnet50, resnet101,
-                                resnet152, ResNet18_Weights, ResNet34_Weights,
-                                ResNet50_Weights, ResNet101_Weights,
-                                ResNet152_Weights, WeightsEnum, Weights)
+                                resnet152, WeightsEnum, Weights)
 
 from ..transforms._cifar_presets import ImageClassificationEval
 
@@ -163,7 +161,7 @@ def resnet152_3x3(*args, **kwargs):
     return _make_resnet_3x3(resnet152(*args, **kwargs))
 
 
-class ResNet18_CIFAR_Weights(ResNet18_Weights):
+class ResNet18_CIFAR_Weights(WeightsEnum):
     CIFAR10_V1 = Weights(
         url="",
         transforms=ImageClassificationEval,
@@ -185,7 +183,7 @@ class ResNet18_CIFAR_Weights(ResNet18_Weights):
     DEFAULT = CIFAR10_V1
 
 
-class ResNet34_CIFAR_Weights(ResNet34_Weights):
+class ResNet34_CIFAR_Weights(WeightsEnum):
     CIFAR10_V1 = Weights(
         url="",
         transforms=ImageClassificationEval,
@@ -207,7 +205,7 @@ class ResNet34_CIFAR_Weights(ResNet34_Weights):
     DEFAULT = CIFAR10_V1
 
 
-class ResNet50_CIFAR_Weights(ResNet50_Weights):
+class ResNet50_CIFAR_Weights(WeightsEnum):
     CIFAR10_V1 = Weights(
         url="",
         transforms=ImageClassificationEval,
@@ -229,7 +227,7 @@ class ResNet50_CIFAR_Weights(ResNet50_Weights):
     DEFAULT = CIFAR10_V1
 
 
-class ResNet101_CIFAR_Weights(ResNet101_Weights):
+class ResNet101_CIFAR_Weights(WeightsEnum):
     CIFAR10_V1 = Weights(
         url="",
         transforms=ImageClassificationEval,
@@ -251,7 +249,7 @@ class ResNet101_CIFAR_Weights(ResNet101_Weights):
     DEFAULT = CIFAR10_V1
 
 
-class ResNet152_CIFAR_Weights(ResNet152_Weights):
+class ResNet152_CIFAR_Weights(WeightsEnum):
     CIFAR10_V1 = Weights(
         url="",
         transforms=ImageClassificationEval,
