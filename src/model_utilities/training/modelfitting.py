@@ -8,7 +8,8 @@ import pandas as pd
 import torch
 import torchbearer
 from torchbearer import Trial
-from torchbearer.callbacks import TensorBoard, TensorBoardText, MultiStepLR
+from torchbearer.callbacks import TensorBoard, TensorBoardText, MultiStepLR, \
+    TorchScheduler
 
 FORCE_MPS = False
 
@@ -60,8 +61,9 @@ def fit_model(model, criterion, opt, trainloader, valloader, epochs=1000,
     :param valloader: validation data loader
     :param epochs: number of epochs
     :param schedule: a list of learning rate drop points (e.g. [100, 150] or
-    None)
-    :param gamma: amount to drop learning rate by at each point
+    None) or an instance of TorchScheduler
+    :param gamma: amount to drop learning rate by at each point if schedule
+    is not None or a TorchScheduler instance
     :param run_id: identifier of the run; used to determine the file name of
     logs
     :param log_dir: location to save log files
@@ -140,7 +142,10 @@ def fit_model(model, criterion, opt, trainloader, valloader, epochs=1000,
                                                      period=period,
                                                      on_batch=False))
     if schedule is not None:
-        cb.append(MultiStepLR(schedule, gamma=gamma))
+        if isinstance(schedule, TorchScheduler):
+            cb.append(schedule)
+        else:
+            cb.append(MultiStepLR(schedule, gamma=gamma))
 
     print('==> Training model..')
     print('using device: ' + str(device))
