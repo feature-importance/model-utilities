@@ -129,8 +129,6 @@ def fit_model(model, criterion, opt, trainloader, valloader, epochs=1000,
     # irrespective of tensorboard we log to csv, etc
     log = model_file.replace('.pt', '-log.csv')
     cb.append(CSVLogger(log))
-    save_model_info(model, os.path.dirname(model_file),
-                    os.path.basename(model_file)+"-info.txt")
 
     if extra_callbacks is not None:
         if not isinstance(extra_callbacks, (list, tuple)):
@@ -185,6 +183,9 @@ def fit_model(model, criterion, opt, trainloader, valloader, epochs=1000,
         # also just save the plain final model weights
         torch.save(model.state_dict(), model_file)
     metrics = trial.evaluate(data_key=torchbearer.TEST_DATA)
+
+    save_model_info(model, os.path.dirname(model_file),
+                    os.path.basename(model_file) + "-info.txt")
 
     return trial, history, metrics
 
