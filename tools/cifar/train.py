@@ -139,7 +139,7 @@ def main():
 
     model_file = os.path.join(args.output_dir,
                               f"{args.model}-{args.dataset}",
-                              "model.pt")
+                              f"model_{args.seed}.pt")
 
     fit_model(model, criterion, opt, train_data_loader, val_data_loader,
               epochs=args.epochs, device='auto', verbose=1, acc='acc',
