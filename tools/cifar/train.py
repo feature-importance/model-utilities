@@ -147,7 +147,7 @@ def main():
               epochs=args.epochs, device='auto', verbose=2, acc='acc',
               model_file=model_file, run_id=run_id, log_dir=args.log_dir,
               resume=args.resume, extra_callbacks=extra_callbacks,
-              period=args.checkpoint_period)
+              period=None)
 
 
 if __name__ == '__main__':
