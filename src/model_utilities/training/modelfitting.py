@@ -7,7 +7,7 @@ import numpy as np
 import pandas as pd
 import torch
 import torchbearer
-from torchbearer import Trial
+from torchbearer import Trial, Callback
 from torchbearer.callbacks import TensorBoard, TensorBoardText, MultiStepLR, \
     TorchScheduler
 
@@ -268,15 +268,15 @@ def parse_learning_rate_arg(learning_rate: str):
         learning_rate: lr string
 
     Returns:
-        tuple of init_lr, [callback]
+        tuple of init_lr, callback
     """
     sp = str(learning_rate).split('*')
     initial = float(sp[0])
 
     if len(sp) == 1:
-        return initial, []
+        return initial, None
     elif len(sp) == 2:
-        return initial, [_parse_schedule(sp[1])]
-    assert False
+        return initial, _parse_schedule(sp[1])
+
 
 

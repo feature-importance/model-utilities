@@ -109,6 +109,7 @@ def main():
     criterion = nn.CrossEntropyLoss()
 
     init_lr, schedule = parse_learning_rate_arg(args.lr)
+    print(schedule)
 
     opt = get_optimizer(args.opt,
                         filter(lambda p: p.requires_grad, model.parameters()),
