@@ -145,7 +145,7 @@ def main():
                               "model.pt")
 
     fit_model(model, criterion, opt, train_data_loader, val_data_loader,
-              epochs=args.epochs, device='auto', verbose=2, acc='acc',
+              epochs=args.epochs, device='auto', verbose=1, acc='acc',
               model_file=model_file, run_id=run_id, log_dir=args.log_dir,
               resume=args.resume, extra_callbacks=extra_callbacks,
               period=None)
