@@ -1,13 +1,14 @@
 import json
-from datetime import datetime
 import random
+import sys
+from datetime import datetime
 
 import numpy as np
 import pandas as pd
 import torch
+import torchbearer
 from torchbearer import Trial
 from torchbearer.callbacks import TensorBoard, TensorBoardText, MultiStepLR
-import torchbearer
 
 FORCE_MPS = False
 
@@ -44,30 +45,36 @@ def get_device(device):
     return torch.device(device)
 
 
-def fit_model(model, loss, opt, trainloader, valloader, epochs=1000, schedule=None, gamma=None, run_id=None, log_dir=None,
-              model_file=None, resume=None, device='auto', verbose=0,  pre_extra_callbacks=None, extra_callbacks=None,
-              acc='acc', period=1, args=None):
+def fit_model(model, criterion, opt, trainloader, valloader, epochs=1000,
+              schedule=None, gamma=None, run_id=None, log_dir=None,
+              model_file=None, resume=None, device='auto', verbose=0,
+              pre_extra_callbacks=None, extra_callbacks=None,
+              acc='acc', period=None, args=None):
     """
     Train a model, logging and snapshotting along the way
 
     :param model: the model to train
-    :param loss: loss function
+    :param criterion: loss function
     :param opt: optimiser
     :param trainloader: training data loader
     :param valloader: validation data loader
     :param epochs: number of epochs
-    :param schedule: a list of learning rate drop points (e.g. [100, 150] or None)
+    :param schedule: a list of learning rate drop points (e.g. [100, 150] or
+    None)
     :param gamma: amount to drop learning rate by at each point
-    :param run_id: identifier of the run; used to determine the file name of logs
+    :param run_id: identifier of the run; used to determine the file name of
+    logs
     :param log_dir: location to save log files
-    :param model_file: name of model file to save (can contain expansions like ".{epoch:03d}.pt")
+    :param model_file: name of model file to save
     :param resume: starts from a previously saved model
     :param device: compute device
-    :param verbose: Verbosity level. 0=No printing, 1=progress bar for entire training, 2=progress bar for one epoch.
+    :param verbose: Verbosity level. 0=No printing, 1=progress bar for entire
+    training, 2=progress bar for one epoch.
     :param pre_extra_callbacks: : extra callbacks to prepend to training loop
     :param extra_callbacks: extra callbacks to add to training loop
-    :param acc: override the accuracy measurement (default 'acc' set based on loss)
-    :param period: how often to save the model
+    :param acc: override the accuracy measurement (default 'acc' set based on
+    loss)
+    :param period: how often to save the model checkpoints (can be None)
     :param args: argsparse arguments or params dict to be logged
     :return:
     """
@@ -75,25 +82,41 @@ def fit_model(model, loss, opt, trainloader, valloader, epochs=1000, schedule=No
 
     device = get_device(device)
 
+    if not model_file.endswith('.pt'):
+        model_file += '.pt'
+
+    model_file_checkpoint = model_file.replace(".pt", ".{epoch:03d}.pt")
+
     cb = []
     if log_dir is not None:
-        current_time = datetime.now().strftime('%b%d_%H-%M-%S') + "-run-" + str(run_id)
-        tboard = TensorBoard(write_graph=False, comment=current_time, log_dir=log_dir)
-        tboardtext = TensorBoardText(write_epoch_metrics=False, comment=current_time, log_dir=log_dir)
+        # TODO: saving init state (optional)
+
+        current_time = datetime.now().strftime('%b%d_%H-%M-%S') + "-run-" + str(
+            run_id)
+        tboard = TensorBoard(write_graph=False, comment=current_time,
+                             log_dir=log_dir)
+        tboardtext = TensorBoardText(write_epoch_metrics=False,
+                                     comment=current_time, log_dir=log_dir)
 
         @torchbearer.callbacks.on_start
         def write_params(_):
-            params = {'model': str(model), 'loss': str(loss), 'opt': str(opt), 'trainloader': str(trainloader),
-                      'valloader': str(valloader), 'schedule': str(schedule), 'run_id': str(run_id),
-                      'log_dir': str(log_dir), 'model_file': str(model_file), 'resume': str(resume),
+            params = {'model': str(model), 'criterion': str(criterion),
+                      'opt': str(opt), 'trainloader': str(trainloader),
+                      'valloader': str(valloader), 'schedule': str(schedule),
+                      'run_id': str(run_id),
+                      'log_dir': str(log_dir), 'model_file': str(model_file),
+                      'resume': str(resume),
                       'device': str(device)}
             df = pd.DataFrame(params, index=[0]).transpose()
-            tboardtext.get_writer(tboardtext.log_dir).add_text('params', df.to_html(), 1)
+            tboardtext.get_writer(tboardtext.log_dir).add_text('params',
+                                                               df.to_html(), 1)
             df.to_json(tboardtext.log_dir + '-params.json')
 
             if args is not None:
                 myargs = args if isinstance(args, dict) else vars(args)
-                tboardtext.get_writer(tboardtext.log_dir).add_text('args', str(myargs), 1)
+                tboardtext.get_writer(tboardtext.log_dir).add_text('args',
+                                                                   str(myargs),
+                                                                   1)
                 with open(tboardtext.log_dir + '-args.json', 'w') as fp:
                     json.dump(myargs, fp)
 
@@ -110,8 +133,12 @@ def fit_model(model, loss, opt, trainloader, valloader, epochs=1000, schedule=No
         cb = pre_extra_callbacks + cb
 
     if model_file is not None:
-        cb.append(torchbearer.callbacks.MostRecent(model_file.replace(".pt", "_last.pt")))
-        cb.append(torchbearer.callbacks.Interval(model_file, period=period, on_batch=False))
+        cb.append(torchbearer.callbacks.MostRecent(
+            model_file.replace(".pt", "_last.pt")))
+        if period is not None:
+            cb.append(torchbearer.callbacks.Interval(model_file_checkpoint,
+                                                     period=period,
+                                                     on_batch=False))
     if schedule is not None:
         cb.append(MultiStepLR(schedule, gamma=gamma))
 
@@ -123,7 +150,7 @@ def fit_model(model, loss, opt, trainloader, valloader, epochs=1000, schedule=No
             metrics.append(acc)
         else:
             metrics.extend(acc)
-    trial = Trial(model, opt, loss, metrics=metrics, callbacks=cb)
+    trial = Trial(model, opt, criterion, metrics=metrics, callbacks=cb)
     trial.with_generators(train_generator=trainloader,
                           val_generator=valloader).to(device)
 
@@ -142,12 +169,15 @@ def fit_model(model, loss, opt, trainloader, valloader, epochs=1000, schedule=No
     history = None
     if trainloader is not None:
         history = trial.run(epochs, verbose=verbose)
+        # also just save the plain final model weights
+        torch.save(model.state_dict(), model_file)
     metrics = trial.evaluate(data_key=torchbearer.TEST_DATA)
 
     return trial, history, metrics
 
 
-def evaluate_model(model, test_loader, metrics, extra_callbacks=None, device='auto', verbose=0):
+def evaluate_model(model, test_loader, metrics, extra_callbacks=None,
+                   device='auto', verbose=0):
     device = get_device(device)
 
     cb = []
@@ -159,7 +189,8 @@ def evaluate_model(model, test_loader, metrics, extra_callbacks=None, device='au
     if not isinstance(metrics, (list, tuple)):
         metrics = [metrics]
 
-    return (torchbearer.Trial(model, None, None, metrics=metrics, callbacks=cb, verbose=verbose)
+    return (torchbearer.Trial(model, None, None, metrics=metrics, callbacks=cb,
+                              verbose=verbose)
             .with_val_generator(test_loader).to(device).evaluate())
 
 
@@ -177,3 +208,70 @@ def load_model(model_file, model, device='auto'):
     model.load_state_dict(weights)
 
     return model
+
+
+def _parse_schedule(sched):
+    if '@' in sched:
+        factor, schtype = sched.split('@')
+        factor = float(factor)
+    else:
+        factor, schtype = None, sched
+
+    step_on_batch = False
+    if schtype.endswith('B') or schtype.endswith('b'):
+        step_on_batch = True
+        schtype = schtype[:-1]
+
+    if schtype.startswith('every'):
+        step = int(schtype[5:])
+        return torchbearer.callbacks.StepLR(step, gamma=factor,
+                                            step_on_batch=step_on_batch)
+    if schtype.startswith('inv'):
+        gamma, power = (float(i) for i in schtype[3:].split(","))
+        return torchbearer.callbacks.LambdaLR(
+            lambda i: (1 + gamma * i) ** (- power), step_on_batch=step_on_batch)
+    elif schtype.startswith('['):
+        milestones = json.loads(schtype)
+        return torchbearer.callbacks.MultiStepLR(milestones, gamma=factor,
+                                                 step_on_batch=step_on_batch)
+    elif schtype == 'plateau':
+        return torchbearer.callbacks.ReduceLROnPlateau(factor=factor,
+                                                       step_on_batch=step_on_batch)
+
+    assert False
+
+
+def parse_learning_rate_arg(learning_rate: str):
+    """
+    Parse a learning rate argument into an initial rate and an optional
+    scheduler callback.
+
+    Examples:
+        0.1                        --  fixed lr
+        0.1*0.2@every10            --  decrease by factor=0.2 every 10 epochs
+        0.1*0.2@every10B           --  decrease by factor=0.2 every 10 epochs
+        0.1*0.2@[10,30,80]         --  decrease by factor=0.2 at epochs 10,
+        30, and 80
+        0.1*0.2@[10,30,80]B        --  decrease by factor=0.2 at epochs 10,
+        30, and 80
+        0.1*0.2@plateau            --  decrease by factor=0.2 on validation
+        plateau
+        0.1*inv0.0001,0.75B        --  decrease by using the old caffe inv
+        rule each batch
+
+    Args:
+        learning_rate: lr string
+
+    Returns:
+        tuple of init_lr, [callback]
+    """
+    sp = str(learning_rate).split('*')
+    initial = float(sp[0])
+
+    if len(sp) == 1:
+        return initial, []
+    elif len(sp) == 2:
+        return initial, [_parse_schedule(sp[1])]
+    assert False
+
+
