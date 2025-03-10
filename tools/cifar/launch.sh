@@ -9,5 +9,5 @@
 module load conda/python3
 source activate torchwatcher
 
-python train.py --dataset cifar10 --model resnet18_3x3 --seed 0 --batch-size 128 --epochs 180 --lr "0.1*0.1@[90,140]" --log-dir ./output/logs --output-dir ./output
+python train.py --batch-size 128 --epochs 180 --lr "0.1*0.1@[90,140]" --log-dir ./output/logs --output-dir ./output "$@"
 
