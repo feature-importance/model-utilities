@@ -3,6 +3,7 @@ Training CIFAR10 models
 """
 import argparse
 import os
+import sys
 
 import torch
 import torch.nn as nn
@@ -97,6 +98,9 @@ def get_optimizer(opt_name, parameters, init_lr, momentum, weight_decay):
 
 
 def main():
+    print("Training models with: ")
+    print(sys.argv)
+
     parser = get_args_parser()
     args = parser.parse_args()
 
@@ -146,7 +150,8 @@ def main():
               model_file=model_file, run_id=run_id, log_dir=args.log_dir,
               resume=args.resume, period=None, schedule=schedule)
 
-    save_args(model_file.replace("model.pt", ""), "model-cmd.txt")
+    save_args(os.path.dirname(model_file),
+              os.path.basename(model_file).replace(".pt", "-cmd.txt"))
 
 
 if __name__ == '__main__':
