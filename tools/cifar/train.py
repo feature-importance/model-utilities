@@ -120,14 +120,14 @@ def main():
                         init_lr, args.momentum, args.weight_decay)
 
     if args.dataset == 'cifar10':
-        train_data = CIFAR10(root=args.data_dir, train=True, download=False,
+        train_data = CIFAR10(root=args.data_dir, train=True, download=True,
                              transform=ImageClassificationTraining())
-        val_data = CIFAR10(root=args.data_dir, train=False, download=False,
+        val_data = CIFAR10(root=args.data_dir, train=False, download=True,
                            transform=ImageClassificationEval())
     else:
-        train_data = CIFAR100(root=args.data_dir, train=True, download=False,
+        train_data = CIFAR100(root=args.data_dir, train=True, download=True,
                               transform=ImageClassificationTraining())
-        val_data = CIFAR100(root=args.data_dir, train=False, download=False,
+        val_data = CIFAR100(root=args.data_dir, train=False, download=True,
                             transform=ImageClassificationEval())
 
     train_data_loader = torch.utils.data.DataLoader(train_data,
