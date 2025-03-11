@@ -9,5 +9,5 @@
 module load conda/python3
 source activate torchwatcher
 
-python train.py -j 8 --batch-size 128 --epochs 180 --lr "0.1*0.1@[90,140]" --log-dir ./output/logs --output-dir ./output "$@"
+python train.py -j 8 --batch-size 64 --epochs 180 --log-dir ./output/logs --output-dir ./output "$@"
 

@@ -8,6 +8,8 @@ import numpy as np
 import pandas as pd
 import torch
 import torchbearer
+
+from model_utilities.training.schedule import ManualLR
 from model_utilities.training.utils import save_model_info
 from torchbearer import Trial, Callback
 from torchbearer.callbacks import TensorBoard, TensorBoardText, MultiStepLR, \
@@ -225,6 +227,9 @@ def load_model(model_file, model, device='auto'):
 
 
 def _parse_schedule(sched):
+    if "<@" in sched:
+        return ManualLR.parse(sched)
+
     if '@' in sched:
         factor, schtype = sched.split('@')
         factor = float(factor)
@@ -272,6 +277,7 @@ def parse_learning_rate_arg(learning_rate: str):
         plateau
         0.1*inv0.0001,0.75B        --  decrease by using the old caffe inv
         rule each batch
+        0.01<@10,0.1<@20,0.01      -- manual lr
 
     Args:
         learning_rate: lr string
