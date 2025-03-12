@@ -285,6 +285,11 @@ def parse_learning_rate_arg(learning_rate: str):
     Returns:
         tuple of init_lr, callback
     """
+
+    if "<@" in learning_rate:
+        sch = _parse_schedule(learning_rate)
+        return float(learning_rate.split("<@")[0]), sch
+
     sp = str(learning_rate).split('*')
     initial = float(sp[0])
 
