@@ -277,7 +277,7 @@ def parse_learning_rate_arg(learning_rate: str):
         plateau
         0.1*inv0.0001,0.75B        --  decrease by using the old caffe inv
         rule each batch
-        0.01<@10,0.1<@20,0.01      -- manual lr
+        0.01<@10,0.1<@20,0.01      --  manual lr
 
     Args:
         learning_rate: lr string
@@ -297,6 +297,4 @@ def parse_learning_rate_arg(learning_rate: str):
         return initial, None
     elif len(sp) == 2:
         return initial, _parse_schedule(sp[1])
-
-
 
