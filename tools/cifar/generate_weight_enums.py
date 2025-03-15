@@ -54,12 +54,12 @@ if __name__ == '__main__':
 
         print(f"class {ccmodel}_Weights(WeightsEnum):")
 
+        best_seed = 0
+        best_acc = 0
         for dataset in model_dataset[model]:
             nparams = count_params(model, dataset)
             dataset = dataset.upper()
 
-            best_seed = 0
-            best_acc = 0
             for seed in range(3):
                 acc = get_acc(f"output/{dir}/model_{seed}-log.csv")
 
