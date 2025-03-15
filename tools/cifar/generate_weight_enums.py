@@ -34,9 +34,8 @@ if __name__ == '__main__':
             model_dataset[model] = []
         model_dataset[model].append(dataset)
 
-
     for dataset in ['cifar10', 'cifar100']:
-        if dataset == 'CIFAR10':
+        if dataset == 'cifar10':
             categories = str(CIFAR10(root="/scratch/jsh2/datasets").classes)
             name = "_COMMON_META_CIFAR10"
         else:
