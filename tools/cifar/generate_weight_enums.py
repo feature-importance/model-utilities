@@ -2,6 +2,9 @@ import os
 
 if __name__ == '__main__':
     for dir in os.listdir('output'):
+        if '-' not in dir:
+            continue
+
         model, dataset = dir.split("-")
         dataset = dataset.upper()
         ccmodel = model.replace("resnet", "ResNet")
