@@ -83,9 +83,9 @@ if __name__ == '__main__':
                 }
             },
             "_docs": \"\"\"These weights reproduce closely the results of the paper using a simple training recipe.\"\"\",
-        },
-        )"""
+        }
+    )"""
                 print(en)
-            print(f"DEFAULT = CIFAR10_s{best_seed}")
+            print(f"    DEFAULT = CIFAR10_s{best_seed}")
             print()
             print()
