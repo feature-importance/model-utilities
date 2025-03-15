@@ -1,4 +1,7 @@
+from torchvision.datasets import CIFAR10, CIFAR100
+
 from model_utilities.models.cifar_resnet import *
+from torchvision.models.resnet import *
 import os
 
 
@@ -31,6 +34,19 @@ if __name__ == '__main__':
             model_dataset[model] = []
         model_dataset[model].append(dataset)
 
+
+    for dataset in ['cifar10', 'cifar100']:
+        if dataset == 'CIFAR10':
+            categories = str(CIFAR10(root="/scratch/jsh2/datasets").classes)
+        else:
+            categories = str(CIFAR100(root="/scratch/jsh2/datasets").classes)
+
+        print("""_COMMON_META_CIFAR10 = {
+    "min_size": (1, 1),
+    "categories":""" + categories)
+        print()
+        print()
+
     for model in model_dataset.keys():
         ccmodel = model.replace("resnet", "ResNet")
 
@@ -40,28 +56,38 @@ if __name__ == '__main__':
             nparams = count_params(model, dataset)
             dataset = dataset.upper()
 
+            best_seed = 0
+            best_acc = 0
             for seed in range(3):
                 acc = get_acc(f"output/{dir}/model_{seed}-log.csv")
+
+                if dataset == 'cifar10':
+                    if acc > best_acc:
+                        best_acc = acc
+                        best_seed = seed
+
                 weights = dataset + "_s" + str(seed)
                 url = (f"http://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
                        f"/{dir}/model_{seed}.pt")
 
                 en = """    """ + weights + """ = Weights(
-            url=""""" + url + """"",
-            transforms=ImageClassificationEval,
-            meta={
-                **_COMMON_META,
-                "num_params": """ + str(nparams) + """,
-                "recipe": "https://github.com/feature-importance/model-utilities"
-                          "/tree/main/tools/cifar#resnet",
-                "_metrics": {
-                    """"" + dataset + """": {
-                        "acc@1": """ + str(acc) + """,
-                    }
-                },
-                "_docs": \"\"\"These weights reproduce closely the results of the 
-                paper using a simple training recipe.\"\"\",
+        url=""""" + url + """"",
+        transforms=ImageClassificationEval,
+        meta={
+            **_COMMON_META_""" + dataset + """,
+            "num_params": """ + str(nparams) + """,
+            "recipe": "https://github.com/feature-importance/model-utilities"
+                      "/tree/main/tools/cifar#resnet",
+            "_metrics": {
+                """"" + dataset + """": {
+                    "acc@1": """ + str(acc) + """,
+                }
             },
+            "_docs": \"\"\"These weights reproduce closely the results of the 
+            paper using a simple training recipe.\"\"\",
+        },
         )"""
                 print(en)
-    # DEFAULT = CIFAR10_V1
+            print(f"DEFAULT = CIFAR10_s{best_seed}")
+            print()
+            print()
