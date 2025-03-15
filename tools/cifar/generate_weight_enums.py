@@ -88,6 +88,6 @@ if __name__ == '__main__':
         }
     )"""
                 print(en)
-            print(f"    DEFAULT = CIFAR10_s{best_seed}")
-            print()
-            print()
+        print(f"    DEFAULT = CIFAR10_s{best_seed}")
+        print()
+        print()
