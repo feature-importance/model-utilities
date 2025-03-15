@@ -187,7 +187,8 @@ def fit_model(model, criterion, opt, trainloader, valloader, epochs=1000,
     metrics = trial.evaluate(data_key=torchbearer.TEST_DATA)
 
     save_model_info(model, os.path.dirname(model_file),
-                    os.path.basename(model_file) + "-info.txt")
+                    os.path.basename(model_file).replace(".pt", "") +
+                    "-info.txt")
 
     return trial, history, metrics
 
@@ -205,7 +206,8 @@ def evaluate_model(model, test_loader, metrics, extra_callbacks=None,
     if not isinstance(metrics, (list, tuple)):
         metrics = [metrics]
 
-    return (torchbearer.Trial(model, None, None, metrics=metrics, callbacks=cb,
+    return (torchbearer.Trial(model, None, None,
+                              metrics=metrics, callbacks=cb,
                               verbose=verbose)
             .with_val_generator(test_loader).to(device).evaluate())
 
