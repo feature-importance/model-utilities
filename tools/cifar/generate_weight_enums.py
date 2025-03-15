@@ -20,7 +20,7 @@ if __name__ == '__main__':
         print(f"class {ccmodel}_Weights(WeightsEnum):")
         nparams = 0
         for seed in range(3):
-            acc = get_acc(f"{dir}/model_{seed}-log.csv")
+            acc = get_acc(f"output/{dir}/model_{seed}-log.csv")
             weights = dataset + "_s" + str(seed)
             url = (f"http://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
                    f"/{dir}/model_{seed}.pt")
