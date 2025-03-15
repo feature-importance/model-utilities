@@ -43,7 +43,7 @@ if __name__ == '__main__':
 
         print("""_COMMON_META_CIFAR10 = {
     "min_size": (1, 1),
-    "categories":""" + categories)
+    "categories": """ + categories)
         print()
         print()
 
@@ -71,20 +71,18 @@ if __name__ == '__main__':
                        f"/{dir}/model_{seed}.pt")
 
                 en = """    """ + weights + """ = Weights(
-        url=""""" + url + """"",
+        url=\"""" + url + """\",
         transforms=ImageClassificationEval,
         meta={
             **_COMMON_META_""" + dataset + """,
             "num_params": """ + str(nparams) + """,
-            "recipe": "https://github.com/feature-importance/model-utilities"
-                      "/tree/main/tools/cifar#resnet",
+            "recipe": "https://github.com/feature-importance/model-utilities/tree/main/tools/cifar#resnet",
             "_metrics": {
-                """"" + dataset + """": {
-                    "acc@1": """ + str(acc) + """,
+                \"""" + dataset + """\": {
+                    "acc@1": """ + str(f"{acc:.3f}") + """,
                 }
             },
-            "_docs": \"\"\"These weights reproduce closely the results of the 
-            paper using a simple training recipe.\"\"\",
+            "_docs": \"\"\"These weights reproduce closely the results of the paper using a simple training recipe.\"\"\",
         },
         )"""
                 print(en)
