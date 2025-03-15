@@ -38,12 +38,15 @@ if __name__ == '__main__':
     for dataset in ['cifar10', 'cifar100']:
         if dataset == 'CIFAR10':
             categories = str(CIFAR10(root="/scratch/jsh2/datasets").classes)
+            name = "_COMMON_META_CIFAR10"
         else:
             categories = str(CIFAR100(root="/scratch/jsh2/datasets").classes)
+            name = "_COMMON_META_CIFAR100"
 
-        print("""_COMMON_META_CIFAR10 = {
+        print(name + """ = {
     "min_size": (1, 1),
     "categories": """ + categories)
+        print("}")
         print()
         print()
 

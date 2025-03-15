@@ -22,17 +22,6 @@ def _make_resnet_3x3(net):
                           padding=(1, 1), bias=False)
     return net
 
-
-_COMMON_META_CIFAR10 = {
-    "min_size": (1, 1),
-    "categories": ['airplane', 'automobile', 'bird', 'cat', 'deer', 'dog',
-                   'frog', 'horse', 'ship', 'truck']
-}
-_COMMON_META_CIFAR100 = {
-    "min_size": (1, 1),
-    "categories": []
-}
-
 def resnet18_3x3(*args, **kwargs):
     return _make_resnet_3x3(resnet18(*args, **kwargs))
 
