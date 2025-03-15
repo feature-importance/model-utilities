@@ -17,12 +17,12 @@ if __name__ == '__main__':
         transforms=ImageClassificationEval,
         meta={
             **_COMMON_META,
-            "num_params": """ + nparams + """,
+            "num_params": """ + str(nparams) + """,
             "recipe": "https://github.com/feature-importance/model-utilities"
                       "/tree/main/tools/cifar#resnet",
             "_metrics": {
                 """"" + dataset + """": {
-                    "acc@1": """ + acc + """,
+                    "acc@1": """ + str(acc) + """,
                 }
             },
             "_docs": \"\"\"These weights reproduce closely the results of the 
