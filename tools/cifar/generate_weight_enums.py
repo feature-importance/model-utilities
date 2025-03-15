@@ -37,7 +37,7 @@ if __name__ == '__main__':
         print(f"class {ccmodel}_Weights(WeightsEnum):")
 
         for dataset in model_dataset[model]:
-            nparams = count_params(ccmodel, dataset)
+            nparams = count_params(model, dataset)
             dataset = dataset.upper()
 
             for seed in range(3):
