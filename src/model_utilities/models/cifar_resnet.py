@@ -24,10 +24,14 @@ def _make_resnet_3x3(net):
     return net
 
 
-_COMMON_META = {
+_COMMON_META_CIFAR10 = {
     "min_size": (1, 1),
     "categories": ['airplane', 'automobile', 'bird', 'cat', 'deer', 'dog',
                    'frog', 'horse', 'ship', 'truck']
+}
+_COMMON_META_CIFAR100 = {
+    "min_size": (1, 1),
+    "categories": []
 }
 
 
