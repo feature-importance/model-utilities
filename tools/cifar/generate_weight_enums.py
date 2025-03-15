@@ -1,5 +1,13 @@
 import os
 
+
+def get_acc(logfile):
+    with open(logfile, 'r') as f:
+        lines = f.read().splitlines()
+        last_line = lines[-1]
+        return float(last_line.split(",")[-1])
+
+
 if __name__ == '__main__':
     for dir in os.listdir('output'):
         if '-' not in dir:
@@ -12,11 +20,13 @@ if __name__ == '__main__':
         print(f"class {ccmodel}_Weights(WeightsEnum):")
         nparams = 0
         for seed in range(3):
-            acc = 0
+            acc = get_acc(f"{dir}/model_{seed}-log.csv")
             weights = dataset + "_s" + str(seed)
+            url = (f"http://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
+                   f"/{dir}/model_{seed}.pt")
 
             en = """    """ + weights + """ = Weights(
-        url="",
+        url=""""" + url + """"",
         transforms=ImageClassificationEval,
         meta={
             **_COMMON_META,
