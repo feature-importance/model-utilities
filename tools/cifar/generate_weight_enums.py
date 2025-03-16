@@ -57,6 +57,7 @@ if __name__ == '__main__':
         best_seed = 0
         best_acc = 0
         for dataset in model_dataset[model]:
+            dir = f"{model}-{dataset}"
             nparams = count_params(model, dataset)
             dataset = dataset.upper()
 
