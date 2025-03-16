@@ -79,3 +79,8 @@ We've trained 3 seeds of each model on both CIFAR-10 and CIFAR-100:
 | cifar100 | resnet152     | 0    | 0.495599985 |
 | cifar100 | resnet152     | 1    | 0.507099986 |
 | cifar100 | resnet152     | 2    | 0.552699983 |
+
+# VGG models
+<a name="vgg"></a>
+
+# ...
