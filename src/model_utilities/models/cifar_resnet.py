@@ -1,7 +1,13 @@
+from _testcapi import instancemethod
+from types import MethodType
+from typing import Type, List, Union, Optional, Any, Mapping
+
+import torch
 from torch import nn
+from torch.hub import load_state_dict_from_url
 from torchvision.models import (resnet18, resnet34, resnet50, resnet101,
                                 resnet152, WeightsEnum, Weights)
-
+from torchvision.models._utils import _ovewrite_named_param
 from ..transforms._cifar_presets import ImageClassificationEval
 
 __all__ = [
@@ -18,30 +24,98 @@ __all__ = [
 ]
 
 
-def _make_resnet_3x3(net):
+def verify(cls, obj: Any) -> Any:
+    if obj is not None:
+        if type(obj) is str:
+            obj = cls[obj.replace(cls.__name__ + ".", "")]
+        elif cls.__name__ == obj.__class__.__name__:
+            return obj
+        elif not isinstance(obj, cls):
+            raise TypeError(
+                f"Invalid Weight class provided; expected {cls.__name__} but "
+                f"received {obj.__class__.__name__}."
+            )
+    return obj
+
+
+def get_state_dict(self, *args: Any, **kwargs: Any) -> Mapping[str, Any]:
+    name = None
+    if "https://marc.ecs.soton.ac.uk/pytorch-models/model-utilities" in self.url:
+        name = self.url.replace(
+            "https://marc.ecs.soton.ac.uk/pytorch-models/model-utilities",
+            "").replace("/", "-")
+
+    return load_state_dict_from_url(self.url,
+                                    file_name=name,
+                                    map_location=torch.device("cpu"),
+                                    *args,
+                                    **kwargs)
+
+
+WeightsEnum.verify = classmethod(verify)
+WeightsEnum.get_state_dict = get_state_dict
+
+
+def _make_resnet_3x3(net, weights: Optional[WeightsEnum] = None,
+                     progress: bool = True):
     net.conv1 = nn.Conv2d(3, 64, kernel_size=(3, 3), stride=(1, 1),
                           padding=(1, 1), bias=False)
+
+    if weights is not None:
+        net.load_state_dict(
+            weights.get_state_dict(progress=progress, check_hash=True))
+
     return net
 
 
-def resnet18_3x3(*args, **kwargs):
-    return _make_resnet_3x3(resnet18(*args, **kwargs))
+def resnet18_3x3(*args, weights: Optional[WeightsEnum] = None,
+                 progress: bool = True, **kwargs):
+    if weights is not None:
+        _ovewrite_named_param(kwargs, "num_classes",
+                              len(weights.meta["categories"]))
+
+    return _make_resnet_3x3(resnet18(*args, **kwargs), weights=weights,
+                            progress=progress)
 
 
-def resnet34_3x3(*args, **kwargs):
-    return _make_resnet_3x3(resnet34(*args, **kwargs))
+def resnet34_3x3(*args, weights: Optional[WeightsEnum] = None,
+                 progress: bool = True, **kwargs):
+    if weights is not None:
+        _ovewrite_named_param(kwargs, "num_classes",
+                              len(weights.meta["categories"]))
+
+    return _make_resnet_3x3(resnet34(*args, **kwargs), weights=weights,
+                            progress=progress)
 
 
-def resnet50_3x3(*args, **kwargs):
-    return _make_resnet_3x3(resnet50(*args, **kwargs))
+def resnet50_3x3(*args, weights: Optional[WeightsEnum] = None,
+                 progress: bool = True, **kwargs):
+    if weights is not None:
+        _ovewrite_named_param(kwargs, "num_classes",
+                              len(weights.meta["categories"]))
+
+    return _make_resnet_3x3(resnet50(*args, **kwargs), weights=weights,
+                            progress=progress)
 
 
-def resnet101_3x3(*args, **kwargs):
-    return _make_resnet_3x3(resnet101(*args, **kwargs))
+def resnet101_3x3(*args, weights: Optional[WeightsEnum] = None,
+                  progress: bool = True, **kwargs):
+    if weights is not None:
+        _ovewrite_named_param(kwargs, "num_classes",
+                              len(weights.meta["categories"]))
+
+    return _make_resnet_3x3(resnet101(*args, **kwargs), weights=weights,
+                            progress=progress)
 
 
-def resnet152_3x3(*args, **kwargs):
-    return _make_resnet_3x3(resnet152(*args, **kwargs))
+def resnet152_3x3(*args, weights: Optional[WeightsEnum] = None,
+                  progress: bool = True, **kwargs):
+    if weights is not None:
+        _ovewrite_named_param(kwargs, "num_classes",
+                              len(weights.meta["categories"]))
+
+    return _make_resnet_3x3(resnet152(*args, **kwargs), weights=weights,
+                            progress=progress)
 
 
 _COMMON_META_CIFAR10 = {
@@ -75,7 +149,7 @@ _COMMON_META_CIFAR100 = {
 
 class ResNet152_3x3_Weights(WeightsEnum):
     CIFAR10_s0 = Weights(
-        url="http://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
+        url="https://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
             "/resnet152_3x3-cifar10/model_0.pt",
         transforms=ImageClassificationEval,
         meta={
@@ -93,7 +167,7 @@ class ResNet152_3x3_Weights(WeightsEnum):
         }
     )
     CIFAR10_s1 = Weights(
-        url="http://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
+        url="https://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
             "/resnet152_3x3-cifar10/model_1.pt",
         transforms=ImageClassificationEval,
         meta={
@@ -111,7 +185,7 @@ class ResNet152_3x3_Weights(WeightsEnum):
         }
     )
     CIFAR10_s2 = Weights(
-        url="http://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
+        url="https://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
             "/resnet152_3x3-cifar10/model_2.pt",
         transforms=ImageClassificationEval,
         meta={
@@ -129,7 +203,7 @@ class ResNet152_3x3_Weights(WeightsEnum):
         }
     )
     CIFAR100_s0 = Weights(
-        url="http://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
+        url="https://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
             "/resnet152_3x3-cifar100/model_0.pt",
         transforms=ImageClassificationEval,
         meta={
@@ -147,7 +221,7 @@ class ResNet152_3x3_Weights(WeightsEnum):
         }
     )
     CIFAR100_s1 = Weights(
-        url="http://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
+        url="https://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
             "/resnet152_3x3-cifar100/model_1.pt",
         transforms=ImageClassificationEval,
         meta={
@@ -165,7 +239,7 @@ class ResNet152_3x3_Weights(WeightsEnum):
         }
     )
     CIFAR100_s2 = Weights(
-        url="http://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
+        url="https://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
             "/resnet152_3x3-cifar100/model_2.pt",
         transforms=ImageClassificationEval,
         meta={
@@ -187,7 +261,7 @@ class ResNet152_3x3_Weights(WeightsEnum):
 
 class ResNet18_Weights(WeightsEnum):
     CIFAR10_s0 = Weights(
-        url="http://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
+        url="https://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
             "/resnet18-cifar10/model_0.pt",
         transforms=ImageClassificationEval,
         meta={
@@ -205,7 +279,7 @@ class ResNet18_Weights(WeightsEnum):
         }
     )
     CIFAR10_s1 = Weights(
-        url="http://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
+        url="https://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
             "/resnet18-cifar10/model_1.pt",
         transforms=ImageClassificationEval,
         meta={
@@ -223,7 +297,7 @@ class ResNet18_Weights(WeightsEnum):
         }
     )
     CIFAR10_s2 = Weights(
-        url="http://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
+        url="https://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
             "/resnet18-cifar10/model_2.pt",
         transforms=ImageClassificationEval,
         meta={
@@ -241,7 +315,7 @@ class ResNet18_Weights(WeightsEnum):
         }
     )
     CIFAR100_s0 = Weights(
-        url="http://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
+        url="https://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
             "/resnet18-cifar100/model_0.pt",
         transforms=ImageClassificationEval,
         meta={
@@ -259,7 +333,7 @@ class ResNet18_Weights(WeightsEnum):
         }
     )
     CIFAR100_s1 = Weights(
-        url="http://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
+        url="https://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
             "/resnet18-cifar100/model_1.pt",
         transforms=ImageClassificationEval,
         meta={
@@ -277,7 +351,7 @@ class ResNet18_Weights(WeightsEnum):
         }
     )
     CIFAR100_s2 = Weights(
-        url="http://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
+        url="https://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
             "/resnet18-cifar100/model_2.pt",
         transforms=ImageClassificationEval,
         meta={
@@ -299,7 +373,7 @@ class ResNet18_Weights(WeightsEnum):
 
 class ResNet50_Weights(WeightsEnum):
     CIFAR100_s0 = Weights(
-        url="http://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
+        url="https://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
             "/resnet50-cifar100/model_0.pt",
         transforms=ImageClassificationEval,
         meta={
@@ -317,7 +391,7 @@ class ResNet50_Weights(WeightsEnum):
         }
     )
     CIFAR100_s1 = Weights(
-        url="http://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
+        url="https://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
             "/resnet50-cifar100/model_1.pt",
         transforms=ImageClassificationEval,
         meta={
@@ -335,7 +409,7 @@ class ResNet50_Weights(WeightsEnum):
         }
     )
     CIFAR100_s2 = Weights(
-        url="http://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
+        url="https://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
             "/resnet50-cifar100/model_2.pt",
         transforms=ImageClassificationEval,
         meta={
@@ -353,7 +427,7 @@ class ResNet50_Weights(WeightsEnum):
         }
     )
     CIFAR10_s0 = Weights(
-        url="http://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
+        url="https://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
             "/resnet50-cifar10/model_0.pt",
         transforms=ImageClassificationEval,
         meta={
@@ -371,7 +445,7 @@ class ResNet50_Weights(WeightsEnum):
         }
     )
     CIFAR10_s1 = Weights(
-        url="http://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
+        url="https://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
             "/resnet50-cifar10/model_1.pt",
         transforms=ImageClassificationEval,
         meta={
@@ -389,7 +463,7 @@ class ResNet50_Weights(WeightsEnum):
         }
     )
     CIFAR10_s2 = Weights(
-        url="http://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
+        url="https://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
             "/resnet50-cifar10/model_2.pt",
         transforms=ImageClassificationEval,
         meta={
@@ -411,7 +485,7 @@ class ResNet50_Weights(WeightsEnum):
 
 class ResNet101_3x3_Weights(WeightsEnum):
     CIFAR10_s0 = Weights(
-        url="http://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
+        url="https://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
             "/resnet101_3x3-cifar10/model_0.pt",
         transforms=ImageClassificationEval,
         meta={
@@ -429,7 +503,7 @@ class ResNet101_3x3_Weights(WeightsEnum):
         }
     )
     CIFAR10_s1 = Weights(
-        url="http://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
+        url="https://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
             "/resnet101_3x3-cifar10/model_1.pt",
         transforms=ImageClassificationEval,
         meta={
@@ -447,7 +521,7 @@ class ResNet101_3x3_Weights(WeightsEnum):
         }
     )
     CIFAR10_s2 = Weights(
-        url="http://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
+        url="https://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
             "/resnet101_3x3-cifar10/model_2.pt",
         transforms=ImageClassificationEval,
         meta={
@@ -465,7 +539,7 @@ class ResNet101_3x3_Weights(WeightsEnum):
         }
     )
     CIFAR100_s0 = Weights(
-        url="http://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
+        url="https://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
             "/resnet101_3x3-cifar100/model_0.pt",
         transforms=ImageClassificationEval,
         meta={
@@ -483,7 +557,7 @@ class ResNet101_3x3_Weights(WeightsEnum):
         }
     )
     CIFAR100_s1 = Weights(
-        url="http://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
+        url="https://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
             "/resnet101_3x3-cifar100/model_1.pt",
         transforms=ImageClassificationEval,
         meta={
@@ -501,7 +575,7 @@ class ResNet101_3x3_Weights(WeightsEnum):
         }
     )
     CIFAR100_s2 = Weights(
-        url="http://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
+        url="https://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
             "/resnet101_3x3-cifar100/model_2.pt",
         transforms=ImageClassificationEval,
         meta={
@@ -523,7 +597,7 @@ class ResNet101_3x3_Weights(WeightsEnum):
 
 class ResNet18_3x3_Weights(WeightsEnum):
     CIFAR10_s0 = Weights(
-        url="http://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
+        url="https://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
             "/resnet18_3x3-cifar10/model_0.pt",
         transforms=ImageClassificationEval,
         meta={
@@ -541,7 +615,7 @@ class ResNet18_3x3_Weights(WeightsEnum):
         }
     )
     CIFAR10_s1 = Weights(
-        url="http://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
+        url="https://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
             "/resnet18_3x3-cifar10/model_1.pt",
         transforms=ImageClassificationEval,
         meta={
@@ -559,7 +633,7 @@ class ResNet18_3x3_Weights(WeightsEnum):
         }
     )
     CIFAR10_s2 = Weights(
-        url="http://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
+        url="https://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
             "/resnet18_3x3-cifar10/model_2.pt",
         transforms=ImageClassificationEval,
         meta={
@@ -577,7 +651,7 @@ class ResNet18_3x3_Weights(WeightsEnum):
         }
     )
     CIFAR100_s0 = Weights(
-        url="http://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
+        url="https://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
             "/resnet18_3x3-cifar100/model_0.pt",
         transforms=ImageClassificationEval,
         meta={
@@ -595,7 +669,7 @@ class ResNet18_3x3_Weights(WeightsEnum):
         }
     )
     CIFAR100_s1 = Weights(
-        url="http://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
+        url="https://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
             "/resnet18_3x3-cifar100/model_1.pt",
         transforms=ImageClassificationEval,
         meta={
@@ -613,7 +687,7 @@ class ResNet18_3x3_Weights(WeightsEnum):
         }
     )
     CIFAR100_s2 = Weights(
-        url="http://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
+        url="https://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
             "/resnet18_3x3-cifar100/model_2.pt",
         transforms=ImageClassificationEval,
         meta={
@@ -635,7 +709,7 @@ class ResNet18_3x3_Weights(WeightsEnum):
 
 class ResNet50_3x3_Weights(WeightsEnum):
     CIFAR10_s0 = Weights(
-        url="http://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
+        url="https://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
             "/resnet50_3x3-cifar10/model_0.pt",
         transforms=ImageClassificationEval,
         meta={
@@ -653,7 +727,7 @@ class ResNet50_3x3_Weights(WeightsEnum):
         }
     )
     CIFAR10_s1 = Weights(
-        url="http://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
+        url="https://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
             "/resnet50_3x3-cifar10/model_1.pt",
         transforms=ImageClassificationEval,
         meta={
@@ -671,7 +745,7 @@ class ResNet50_3x3_Weights(WeightsEnum):
         }
     )
     CIFAR10_s2 = Weights(
-        url="http://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
+        url="https://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
             "/resnet50_3x3-cifar10/model_2.pt",
         transforms=ImageClassificationEval,
         meta={
@@ -689,7 +763,7 @@ class ResNet50_3x3_Weights(WeightsEnum):
         }
     )
     CIFAR100_s0 = Weights(
-        url="http://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
+        url="https://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
             "/resnet50_3x3-cifar100/model_0.pt",
         transforms=ImageClassificationEval,
         meta={
@@ -707,7 +781,7 @@ class ResNet50_3x3_Weights(WeightsEnum):
         }
     )
     CIFAR100_s1 = Weights(
-        url="http://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
+        url="https://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
             "/resnet50_3x3-cifar100/model_1.pt",
         transforms=ImageClassificationEval,
         meta={
@@ -725,7 +799,7 @@ class ResNet50_3x3_Weights(WeightsEnum):
         }
     )
     CIFAR100_s2 = Weights(
-        url="http://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
+        url="https://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
             "/resnet50_3x3-cifar100/model_2.pt",
         transforms=ImageClassificationEval,
         meta={
@@ -747,7 +821,7 @@ class ResNet50_3x3_Weights(WeightsEnum):
 
 class ResNet34_3x3_Weights(WeightsEnum):
     CIFAR10_s0 = Weights(
-        url="http://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
+        url="https://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
             "/resnet34_3x3-cifar10/model_0.pt",
         transforms=ImageClassificationEval,
         meta={
@@ -765,7 +839,7 @@ class ResNet34_3x3_Weights(WeightsEnum):
         }
     )
     CIFAR10_s1 = Weights(
-        url="http://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
+        url="https://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
             "/resnet34_3x3-cifar10/model_1.pt",
         transforms=ImageClassificationEval,
         meta={
@@ -783,7 +857,7 @@ class ResNet34_3x3_Weights(WeightsEnum):
         }
     )
     CIFAR10_s2 = Weights(
-        url="http://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
+        url="https://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
             "/resnet34_3x3-cifar10/model_2.pt",
         transforms=ImageClassificationEval,
         meta={
@@ -801,7 +875,7 @@ class ResNet34_3x3_Weights(WeightsEnum):
         }
     )
     CIFAR100_s0 = Weights(
-        url="http://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
+        url="https://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
             "/resnet34_3x3-cifar100/model_0.pt",
         transforms=ImageClassificationEval,
         meta={
@@ -819,7 +893,7 @@ class ResNet34_3x3_Weights(WeightsEnum):
         }
     )
     CIFAR100_s1 = Weights(
-        url="http://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
+        url="https://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
             "/resnet34_3x3-cifar100/model_1.pt",
         transforms=ImageClassificationEval,
         meta={
@@ -837,7 +911,7 @@ class ResNet34_3x3_Weights(WeightsEnum):
         }
     )
     CIFAR100_s2 = Weights(
-        url="http://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
+        url="https://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
             "/resnet34_3x3-cifar100/model_2.pt",
         transforms=ImageClassificationEval,
         meta={
@@ -859,7 +933,7 @@ class ResNet34_3x3_Weights(WeightsEnum):
 
 class ResNet34_Weights(WeightsEnum):
     CIFAR100_s0 = Weights(
-        url="http://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
+        url="https://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
             "/resnet34-cifar100/model_0.pt",
         transforms=ImageClassificationEval,
         meta={
@@ -877,7 +951,7 @@ class ResNet34_Weights(WeightsEnum):
         }
     )
     CIFAR100_s1 = Weights(
-        url="http://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
+        url="https://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
             "/resnet34-cifar100/model_1.pt",
         transforms=ImageClassificationEval,
         meta={
@@ -895,7 +969,7 @@ class ResNet34_Weights(WeightsEnum):
         }
     )
     CIFAR100_s2 = Weights(
-        url="http://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
+        url="https://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
             "/resnet34-cifar100/model_2.pt",
         transforms=ImageClassificationEval,
         meta={
@@ -913,7 +987,7 @@ class ResNet34_Weights(WeightsEnum):
         }
     )
     CIFAR10_s0 = Weights(
-        url="http://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
+        url="https://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
             "/resnet34-cifar10/model_0.pt",
         transforms=ImageClassificationEval,
         meta={
@@ -931,7 +1005,7 @@ class ResNet34_Weights(WeightsEnum):
         }
     )
     CIFAR10_s1 = Weights(
-        url="http://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
+        url="https://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
             "/resnet34-cifar10/model_1.pt",
         transforms=ImageClassificationEval,
         meta={
@@ -949,7 +1023,7 @@ class ResNet34_Weights(WeightsEnum):
         }
     )
     CIFAR10_s2 = Weights(
-        url="http://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
+        url="https://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
             "/resnet34-cifar10/model_2.pt",
         transforms=ImageClassificationEval,
         meta={
@@ -971,7 +1045,7 @@ class ResNet34_Weights(WeightsEnum):
 
 class ResNet152_Weights(WeightsEnum):
     CIFAR100_s0 = Weights(
-        url="http://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
+        url="https://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
             "/resnet152-cifar100/model_0.pt",
         transforms=ImageClassificationEval,
         meta={
@@ -989,7 +1063,7 @@ class ResNet152_Weights(WeightsEnum):
         }
     )
     CIFAR100_s1 = Weights(
-        url="http://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
+        url="https://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
             "/resnet152-cifar100/model_1.pt",
         transforms=ImageClassificationEval,
         meta={
@@ -1007,7 +1081,7 @@ class ResNet152_Weights(WeightsEnum):
         }
     )
     CIFAR100_s2 = Weights(
-        url="http://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
+        url="https://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
             "/resnet152-cifar100/model_2.pt",
         transforms=ImageClassificationEval,
         meta={
@@ -1025,7 +1099,7 @@ class ResNet152_Weights(WeightsEnum):
         }
     )
     CIFAR10_s0 = Weights(
-        url="http://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
+        url="https://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
             "/resnet152-cifar10/model_0.pt",
         transforms=ImageClassificationEval,
         meta={
@@ -1043,7 +1117,7 @@ class ResNet152_Weights(WeightsEnum):
         }
     )
     CIFAR10_s1 = Weights(
-        url="http://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
+        url="https://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
             "/resnet152-cifar10/model_1.pt",
         transforms=ImageClassificationEval,
         meta={
@@ -1061,7 +1135,7 @@ class ResNet152_Weights(WeightsEnum):
         }
     )
     CIFAR10_s2 = Weights(
-        url="http://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
+        url="https://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
             "/resnet152-cifar10/model_2.pt",
         transforms=ImageClassificationEval,
         meta={
@@ -1083,7 +1157,7 @@ class ResNet152_Weights(WeightsEnum):
 
 class ResNet101_Weights(WeightsEnum):
     CIFAR10_s0 = Weights(
-        url="http://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
+        url="https://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
             "/resnet101-cifar10/model_0.pt",
         transforms=ImageClassificationEval,
         meta={
@@ -1101,7 +1175,7 @@ class ResNet101_Weights(WeightsEnum):
         }
     )
     CIFAR10_s1 = Weights(
-        url="http://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
+        url="https://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
             "/resnet101-cifar10/model_1.pt",
         transforms=ImageClassificationEval,
         meta={
@@ -1119,7 +1193,7 @@ class ResNet101_Weights(WeightsEnum):
         }
     )
     CIFAR10_s2 = Weights(
-        url="http://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
+        url="https://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
             "/resnet101-cifar10/model_2.pt",
         transforms=ImageClassificationEval,
         meta={
@@ -1137,7 +1211,7 @@ class ResNet101_Weights(WeightsEnum):
         }
     )
     CIFAR100_s0 = Weights(
-        url="http://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
+        url="https://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
             "/resnet101-cifar100/model_0.pt",
         transforms=ImageClassificationEval,
         meta={
@@ -1155,7 +1229,7 @@ class ResNet101_Weights(WeightsEnum):
         }
     )
     CIFAR100_s1 = Weights(
-        url="http://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
+        url="https://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
             "/resnet101-cifar100/model_1.pt",
         transforms=ImageClassificationEval,
         meta={
@@ -1173,7 +1247,7 @@ class ResNet101_Weights(WeightsEnum):
         }
     )
     CIFAR100_s2 = Weights(
-        url="http://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
+        url="https://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
             "/resnet101-cifar100/model_2.pt",
         transforms=ImageClassificationEval,
         meta={

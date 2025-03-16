@@ -70,7 +70,7 @@ if __name__ == '__main__':
                         best_seed = seed
 
                 weights = dataset + "_s" + str(seed)
-                url = (f"http://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
+                url = (f"https://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
                        f"/{dir}/model_{seed}.pt")
 
                 en = """    """ + weights + """ = Weights(
