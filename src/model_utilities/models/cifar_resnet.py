@@ -1,6 +1,8 @@
-from _testcapi import instancemethod
-from types import MethodType
-from typing import Type, List, Union, Optional, Any, Mapping
+"""
+CIFAR ResNet models (3x3 filters in the first layer) plus pretrained weights.
+"""
+
+from typing import Optional, Any, Mapping
 
 import torch
 from torch import nn
@@ -8,6 +10,7 @@ from torch.hub import load_state_dict_from_url
 from torchvision.models import (resnet18, resnet34, resnet50, resnet101,
                                 resnet152, WeightsEnum, Weights)
 from torchvision.models._utils import _ovewrite_named_param
+
 from ..transforms._cifar_presets import ImageClassificationEval
 
 __all__ = [
@@ -40,7 +43,8 @@ def verify(cls, obj: Any) -> Any:
 
 def get_state_dict(self, *args: Any, **kwargs: Any) -> Mapping[str, Any]:
     name = None
-    if "https://marc.ecs.soton.ac.uk/pytorch-models/model-utilities" in self.url:
+    if ("https://marc.ecs.soton.ac.uk/pytorch-models/model-utilities" in
+            self.url):
         name = self.url.replace(
             "https://marc.ecs.soton.ac.uk/pytorch-models/model-utilities",
             "").replace("/", "-")
@@ -58,8 +62,8 @@ WeightsEnum.get_state_dict = get_state_dict
 
 def _make_resnet_3x3(net, weights: Optional[WeightsEnum] = None,
                      progress: bool = True):
-    net.conv1 = nn.Conv2d(3, 64, kernel_size=(3, 3), stride=(1, 1),
-                          padding=(1, 1), bias=False)
+    net.conv1 = nn.Conv2d(3, 64, kernel_size=(3, 3),
+                          stride=(1, 1),padding=(1, 1), bias=False)
 
     if weights is not None:
         net.load_state_dict(
