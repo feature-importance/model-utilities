@@ -76,7 +76,7 @@ _COMMON_META_CIFAR100 = {
 class ResNet152_3x3_Weights(WeightsEnum):
     CIFAR10_s0 = Weights(
         url="http://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
-            "/resnet18-cifar100/model_0.pt",
+            "/resnet152_3x3-cifar10/model_0.pt",
         transforms=ImageClassificationEval,
         meta={
             **_COMMON_META_CIFAR10,
@@ -85,7 +85,7 @@ class ResNet152_3x3_Weights(WeightsEnum):
                       "/tree/main/tools/cifar#resnet",
             "_metrics": {
                 "CIFAR10": {
-                    "acc@1": 0.556,
+                    "acc@1": 0.920,
                 }
             },
             "_docs": """These weights reproduce closely the results of the 
@@ -94,7 +94,7 @@ class ResNet152_3x3_Weights(WeightsEnum):
     )
     CIFAR10_s1 = Weights(
         url="http://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
-            "/resnet18-cifar100/model_1.pt",
+            "/resnet152_3x3-cifar10/model_1.pt",
         transforms=ImageClassificationEval,
         meta={
             **_COMMON_META_CIFAR10,
@@ -103,7 +103,7 @@ class ResNet152_3x3_Weights(WeightsEnum):
                       "/tree/main/tools/cifar#resnet",
             "_metrics": {
                 "CIFAR10": {
-                    "acc@1": 0.552,
+                    "acc@1": 0.922,
                 }
             },
             "_docs": """These weights reproduce closely the results of the 
@@ -112,7 +112,7 @@ class ResNet152_3x3_Weights(WeightsEnum):
     )
     CIFAR10_s2 = Weights(
         url="http://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
-            "/resnet18-cifar100/model_2.pt",
+            "/resnet152_3x3-cifar10/model_2.pt",
         transforms=ImageClassificationEval,
         meta={
             **_COMMON_META_CIFAR10,
@@ -121,7 +121,7 @@ class ResNet152_3x3_Weights(WeightsEnum):
                       "/tree/main/tools/cifar#resnet",
             "_metrics": {
                 "CIFAR10": {
-                    "acc@1": 0.559,
+                    "acc@1": 0.928,
                 }
             },
             "_docs": """These weights reproduce closely the results of the 
@@ -130,7 +130,7 @@ class ResNet152_3x3_Weights(WeightsEnum):
     )
     CIFAR100_s0 = Weights(
         url="http://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
-            "/resnet18-cifar100/model_0.pt",
+            "/resnet152_3x3-cifar100/model_0.pt",
         transforms=ImageClassificationEval,
         meta={
             **_COMMON_META_CIFAR100,
@@ -139,7 +139,7 @@ class ResNet152_3x3_Weights(WeightsEnum):
                       "/tree/main/tools/cifar#resnet",
             "_metrics": {
                 "CIFAR100": {
-                    "acc@1": 0.556,
+                    "acc@1": 0.658,
                 }
             },
             "_docs": """These weights reproduce closely the results of the 
@@ -148,7 +148,7 @@ class ResNet152_3x3_Weights(WeightsEnum):
     )
     CIFAR100_s1 = Weights(
         url="http://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
-            "/resnet18-cifar100/model_1.pt",
+            "/resnet152_3x3-cifar100/model_1.pt",
         transforms=ImageClassificationEval,
         meta={
             **_COMMON_META_CIFAR100,
@@ -157,7 +157,7 @@ class ResNet152_3x3_Weights(WeightsEnum):
                       "/tree/main/tools/cifar#resnet",
             "_metrics": {
                 "CIFAR100": {
-                    "acc@1": 0.552,
+                    "acc@1": 0.647,
                 }
             },
             "_docs": """These weights reproduce closely the results of the 
@@ -166,7 +166,7 @@ class ResNet152_3x3_Weights(WeightsEnum):
     )
     CIFAR100_s2 = Weights(
         url="http://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
-            "/resnet18-cifar100/model_2.pt",
+            "/resnet152_3x3-cifar100/model_2.pt",
         transforms=ImageClassificationEval,
         meta={
             **_COMMON_META_CIFAR100,
@@ -175,7 +175,7 @@ class ResNet152_3x3_Weights(WeightsEnum):
                       "/tree/main/tools/cifar#resnet",
             "_metrics": {
                 "CIFAR100": {
-                    "acc@1": 0.559,
+                    "acc@1": 0.620,
                 }
             },
             "_docs": """These weights reproduce closely the results of the 
@@ -188,7 +188,7 @@ class ResNet152_3x3_Weights(WeightsEnum):
 class ResNet18_Weights(WeightsEnum):
     CIFAR10_s0 = Weights(
         url="http://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
-            "/resnet18-cifar100/model_0.pt",
+            "/resnet18-cifar10/model_0.pt",
         transforms=ImageClassificationEval,
         meta={
             **_COMMON_META_CIFAR10,
@@ -197,7 +197,7 @@ class ResNet18_Weights(WeightsEnum):
                       "/tree/main/tools/cifar#resnet",
             "_metrics": {
                 "CIFAR10": {
-                    "acc@1": 0.556,
+                    "acc@1": 0.872,
                 }
             },
             "_docs": """These weights reproduce closely the results of the 
@@ -206,7 +206,7 @@ class ResNet18_Weights(WeightsEnum):
     )
     CIFAR10_s1 = Weights(
         url="http://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
-            "/resnet18-cifar100/model_1.pt",
+            "/resnet18-cifar10/model_1.pt",
         transforms=ImageClassificationEval,
         meta={
             **_COMMON_META_CIFAR10,
@@ -215,7 +215,7 @@ class ResNet18_Weights(WeightsEnum):
                       "/tree/main/tools/cifar#resnet",
             "_metrics": {
                 "CIFAR10": {
-                    "acc@1": 0.552,
+                    "acc@1": 0.867,
                 }
             },
             "_docs": """These weights reproduce closely the results of the 
@@ -224,7 +224,7 @@ class ResNet18_Weights(WeightsEnum):
     )
     CIFAR10_s2 = Weights(
         url="http://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
-            "/resnet18-cifar100/model_2.pt",
+            "/resnet18-cifar10/model_2.pt",
         transforms=ImageClassificationEval,
         meta={
             **_COMMON_META_CIFAR10,
@@ -233,7 +233,7 @@ class ResNet18_Weights(WeightsEnum):
                       "/tree/main/tools/cifar#resnet",
             "_metrics": {
                 "CIFAR10": {
-                    "acc@1": 0.559,
+                    "acc@1": 0.869,
                 }
             },
             "_docs": """These weights reproduce closely the results of the 
@@ -300,7 +300,7 @@ class ResNet18_Weights(WeightsEnum):
 class ResNet50_Weights(WeightsEnum):
     CIFAR100_s0 = Weights(
         url="http://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
-            "/resnet18-cifar100/model_0.pt",
+            "/resnet50-cifar100/model_0.pt",
         transforms=ImageClassificationEval,
         meta={
             **_COMMON_META_CIFAR100,
@@ -309,7 +309,7 @@ class ResNet50_Weights(WeightsEnum):
                       "/tree/main/tools/cifar#resnet",
             "_metrics": {
                 "CIFAR100": {
-                    "acc@1": 0.556,
+                    "acc@1": 0.547,
                 }
             },
             "_docs": """These weights reproduce closely the results of the 
@@ -318,7 +318,7 @@ class ResNet50_Weights(WeightsEnum):
     )
     CIFAR100_s1 = Weights(
         url="http://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
-            "/resnet18-cifar100/model_1.pt",
+            "/resnet50-cifar100/model_1.pt",
         transforms=ImageClassificationEval,
         meta={
             **_COMMON_META_CIFAR100,
@@ -327,7 +327,7 @@ class ResNet50_Weights(WeightsEnum):
                       "/tree/main/tools/cifar#resnet",
             "_metrics": {
                 "CIFAR100": {
-                    "acc@1": 0.552,
+                    "acc@1": 0.546,
                 }
             },
             "_docs": """These weights reproduce closely the results of the 
@@ -336,7 +336,7 @@ class ResNet50_Weights(WeightsEnum):
     )
     CIFAR100_s2 = Weights(
         url="http://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
-            "/resnet18-cifar100/model_2.pt",
+            "/resnet50-cifar100/model_2.pt",
         transforms=ImageClassificationEval,
         meta={
             **_COMMON_META_CIFAR100,
@@ -345,7 +345,7 @@ class ResNet50_Weights(WeightsEnum):
                       "/tree/main/tools/cifar#resnet",
             "_metrics": {
                 "CIFAR100": {
-                    "acc@1": 0.559,
+                    "acc@1": 0.526,
                 }
             },
             "_docs": """These weights reproduce closely the results of the 
@@ -354,7 +354,7 @@ class ResNet50_Weights(WeightsEnum):
     )
     CIFAR10_s0 = Weights(
         url="http://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
-            "/resnet18-cifar100/model_0.pt",
+            "/resnet50-cifar10/model_0.pt",
         transforms=ImageClassificationEval,
         meta={
             **_COMMON_META_CIFAR10,
@@ -363,7 +363,7 @@ class ResNet50_Weights(WeightsEnum):
                       "/tree/main/tools/cifar#resnet",
             "_metrics": {
                 "CIFAR10": {
-                    "acc@1": 0.556,
+                    "acc@1": 0.872,
                 }
             },
             "_docs": """These weights reproduce closely the results of the 
@@ -372,7 +372,7 @@ class ResNet50_Weights(WeightsEnum):
     )
     CIFAR10_s1 = Weights(
         url="http://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
-            "/resnet18-cifar100/model_1.pt",
+            "/resnet50-cifar10/model_1.pt",
         transforms=ImageClassificationEval,
         meta={
             **_COMMON_META_CIFAR10,
@@ -381,7 +381,7 @@ class ResNet50_Weights(WeightsEnum):
                       "/tree/main/tools/cifar#resnet",
             "_metrics": {
                 "CIFAR10": {
-                    "acc@1": 0.552,
+                    "acc@1": 0.879,
                 }
             },
             "_docs": """These weights reproduce closely the results of the 
@@ -390,7 +390,7 @@ class ResNet50_Weights(WeightsEnum):
     )
     CIFAR10_s2 = Weights(
         url="http://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
-            "/resnet18-cifar100/model_2.pt",
+            "/resnet50-cifar10/model_2.pt",
         transforms=ImageClassificationEval,
         meta={
             **_COMMON_META_CIFAR10,
@@ -399,7 +399,7 @@ class ResNet50_Weights(WeightsEnum):
                       "/tree/main/tools/cifar#resnet",
             "_metrics": {
                 "CIFAR10": {
-                    "acc@1": 0.559,
+                    "acc@1": 0.880,
                 }
             },
             "_docs": """These weights reproduce closely the results of the 
@@ -412,7 +412,7 @@ class ResNet50_Weights(WeightsEnum):
 class ResNet101_3x3_Weights(WeightsEnum):
     CIFAR10_s0 = Weights(
         url="http://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
-            "/resnet18-cifar100/model_0.pt",
+            "/resnet101_3x3-cifar10/model_0.pt",
         transforms=ImageClassificationEval,
         meta={
             **_COMMON_META_CIFAR10,
@@ -421,7 +421,7 @@ class ResNet101_3x3_Weights(WeightsEnum):
                       "/tree/main/tools/cifar#resnet",
             "_metrics": {
                 "CIFAR10": {
-                    "acc@1": 0.556,
+                    "acc@1": 0.932,
                 }
             },
             "_docs": """These weights reproduce closely the results of the 
@@ -430,7 +430,7 @@ class ResNet101_3x3_Weights(WeightsEnum):
     )
     CIFAR10_s1 = Weights(
         url="http://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
-            "/resnet18-cifar100/model_1.pt",
+            "/resnet101_3x3-cifar10/model_1.pt",
         transforms=ImageClassificationEval,
         meta={
             **_COMMON_META_CIFAR10,
@@ -439,7 +439,7 @@ class ResNet101_3x3_Weights(WeightsEnum):
                       "/tree/main/tools/cifar#resnet",
             "_metrics": {
                 "CIFAR10": {
-                    "acc@1": 0.552,
+                    "acc@1": 0.920,
                 }
             },
             "_docs": """These weights reproduce closely the results of the 
@@ -448,7 +448,7 @@ class ResNet101_3x3_Weights(WeightsEnum):
     )
     CIFAR10_s2 = Weights(
         url="http://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
-            "/resnet18-cifar100/model_2.pt",
+            "/resnet101_3x3-cifar10/model_2.pt",
         transforms=ImageClassificationEval,
         meta={
             **_COMMON_META_CIFAR10,
@@ -457,7 +457,7 @@ class ResNet101_3x3_Weights(WeightsEnum):
                       "/tree/main/tools/cifar#resnet",
             "_metrics": {
                 "CIFAR10": {
-                    "acc@1": 0.559,
+                    "acc@1": 0.928,
                 }
             },
             "_docs": """These weights reproduce closely the results of the 
@@ -466,7 +466,7 @@ class ResNet101_3x3_Weights(WeightsEnum):
     )
     CIFAR100_s0 = Weights(
         url="http://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
-            "/resnet18-cifar100/model_0.pt",
+            "/resnet101_3x3-cifar100/model_0.pt",
         transforms=ImageClassificationEval,
         meta={
             **_COMMON_META_CIFAR100,
@@ -475,7 +475,7 @@ class ResNet101_3x3_Weights(WeightsEnum):
                       "/tree/main/tools/cifar#resnet",
             "_metrics": {
                 "CIFAR100": {
-                    "acc@1": 0.556,
+                    "acc@1": 0.649,
                 }
             },
             "_docs": """These weights reproduce closely the results of the 
@@ -484,7 +484,7 @@ class ResNet101_3x3_Weights(WeightsEnum):
     )
     CIFAR100_s1 = Weights(
         url="http://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
-            "/resnet18-cifar100/model_1.pt",
+            "/resnet101_3x3-cifar100/model_1.pt",
         transforms=ImageClassificationEval,
         meta={
             **_COMMON_META_CIFAR100,
@@ -493,7 +493,7 @@ class ResNet101_3x3_Weights(WeightsEnum):
                       "/tree/main/tools/cifar#resnet",
             "_metrics": {
                 "CIFAR100": {
-                    "acc@1": 0.552,
+                    "acc@1": 0.613,
                 }
             },
             "_docs": """These weights reproduce closely the results of the 
@@ -502,7 +502,7 @@ class ResNet101_3x3_Weights(WeightsEnum):
     )
     CIFAR100_s2 = Weights(
         url="http://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
-            "/resnet18-cifar100/model_2.pt",
+            "/resnet101_3x3-cifar100/model_2.pt",
         transforms=ImageClassificationEval,
         meta={
             **_COMMON_META_CIFAR100,
@@ -511,7 +511,7 @@ class ResNet101_3x3_Weights(WeightsEnum):
                       "/tree/main/tools/cifar#resnet",
             "_metrics": {
                 "CIFAR100": {
-                    "acc@1": 0.559,
+                    "acc@1": 0.666,
                 }
             },
             "_docs": """These weights reproduce closely the results of the 
@@ -524,7 +524,7 @@ class ResNet101_3x3_Weights(WeightsEnum):
 class ResNet18_3x3_Weights(WeightsEnum):
     CIFAR10_s0 = Weights(
         url="http://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
-            "/resnet18-cifar100/model_0.pt",
+            "/resnet18_3x3-cifar10/model_0.pt",
         transforms=ImageClassificationEval,
         meta={
             **_COMMON_META_CIFAR10,
@@ -533,7 +533,7 @@ class ResNet18_3x3_Weights(WeightsEnum):
                       "/tree/main/tools/cifar#resnet",
             "_metrics": {
                 "CIFAR10": {
-                    "acc@1": 0.556,
+                    "acc@1": 0.916,
                 }
             },
             "_docs": """These weights reproduce closely the results of the 
@@ -542,7 +542,7 @@ class ResNet18_3x3_Weights(WeightsEnum):
     )
     CIFAR10_s1 = Weights(
         url="http://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
-            "/resnet18-cifar100/model_1.pt",
+            "/resnet18_3x3-cifar10/model_1.pt",
         transforms=ImageClassificationEval,
         meta={
             **_COMMON_META_CIFAR10,
@@ -551,7 +551,7 @@ class ResNet18_3x3_Weights(WeightsEnum):
                       "/tree/main/tools/cifar#resnet",
             "_metrics": {
                 "CIFAR10": {
-                    "acc@1": 0.552,
+                    "acc@1": 0.923,
                 }
             },
             "_docs": """These weights reproduce closely the results of the 
@@ -560,7 +560,7 @@ class ResNet18_3x3_Weights(WeightsEnum):
     )
     CIFAR10_s2 = Weights(
         url="http://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
-            "/resnet18-cifar100/model_2.pt",
+            "/resnet18_3x3-cifar10/model_2.pt",
         transforms=ImageClassificationEval,
         meta={
             **_COMMON_META_CIFAR10,
@@ -569,7 +569,7 @@ class ResNet18_3x3_Weights(WeightsEnum):
                       "/tree/main/tools/cifar#resnet",
             "_metrics": {
                 "CIFAR10": {
-                    "acc@1": 0.559,
+                    "acc@1": 0.922,
                 }
             },
             "_docs": """These weights reproduce closely the results of the 
@@ -578,7 +578,7 @@ class ResNet18_3x3_Weights(WeightsEnum):
     )
     CIFAR100_s0 = Weights(
         url="http://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
-            "/resnet18-cifar100/model_0.pt",
+            "/resnet18_3x3-cifar100/model_0.pt",
         transforms=ImageClassificationEval,
         meta={
             **_COMMON_META_CIFAR100,
@@ -587,7 +587,7 @@ class ResNet18_3x3_Weights(WeightsEnum):
                       "/tree/main/tools/cifar#resnet",
             "_metrics": {
                 "CIFAR100": {
-                    "acc@1": 0.556,
+                    "acc@1": 0.657,
                 }
             },
             "_docs": """These weights reproduce closely the results of the 
@@ -596,7 +596,7 @@ class ResNet18_3x3_Weights(WeightsEnum):
     )
     CIFAR100_s1 = Weights(
         url="http://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
-            "/resnet18-cifar100/model_1.pt",
+            "/resnet18_3x3-cifar100/model_1.pt",
         transforms=ImageClassificationEval,
         meta={
             **_COMMON_META_CIFAR100,
@@ -605,7 +605,7 @@ class ResNet18_3x3_Weights(WeightsEnum):
                       "/tree/main/tools/cifar#resnet",
             "_metrics": {
                 "CIFAR100": {
-                    "acc@1": 0.552,
+                    "acc@1": 0.665,
                 }
             },
             "_docs": """These weights reproduce closely the results of the 
@@ -614,7 +614,7 @@ class ResNet18_3x3_Weights(WeightsEnum):
     )
     CIFAR100_s2 = Weights(
         url="http://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
-            "/resnet18-cifar100/model_2.pt",
+            "/resnet18_3x3-cifar100/model_2.pt",
         transforms=ImageClassificationEval,
         meta={
             **_COMMON_META_CIFAR100,
@@ -623,7 +623,7 @@ class ResNet18_3x3_Weights(WeightsEnum):
                       "/tree/main/tools/cifar#resnet",
             "_metrics": {
                 "CIFAR100": {
-                    "acc@1": 0.559,
+                    "acc@1": 0.660,
                 }
             },
             "_docs": """These weights reproduce closely the results of the 
@@ -636,7 +636,7 @@ class ResNet18_3x3_Weights(WeightsEnum):
 class ResNet50_3x3_Weights(WeightsEnum):
     CIFAR10_s0 = Weights(
         url="http://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
-            "/resnet18-cifar100/model_0.pt",
+            "/resnet50_3x3-cifar10/model_0.pt",
         transforms=ImageClassificationEval,
         meta={
             **_COMMON_META_CIFAR10,
@@ -645,7 +645,7 @@ class ResNet50_3x3_Weights(WeightsEnum):
                       "/tree/main/tools/cifar#resnet",
             "_metrics": {
                 "CIFAR10": {
-                    "acc@1": 0.556,
+                    "acc@1": 0.926,
                 }
             },
             "_docs": """These weights reproduce closely the results of the 
@@ -654,7 +654,7 @@ class ResNet50_3x3_Weights(WeightsEnum):
     )
     CIFAR10_s1 = Weights(
         url="http://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
-            "/resnet18-cifar100/model_1.pt",
+            "/resnet50_3x3-cifar10/model_1.pt",
         transforms=ImageClassificationEval,
         meta={
             **_COMMON_META_CIFAR10,
@@ -663,7 +663,7 @@ class ResNet50_3x3_Weights(WeightsEnum):
                       "/tree/main/tools/cifar#resnet",
             "_metrics": {
                 "CIFAR10": {
-                    "acc@1": 0.552,
+                    "acc@1": 0.933,
                 }
             },
             "_docs": """These weights reproduce closely the results of the 
@@ -672,7 +672,7 @@ class ResNet50_3x3_Weights(WeightsEnum):
     )
     CIFAR10_s2 = Weights(
         url="http://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
-            "/resnet18-cifar100/model_2.pt",
+            "/resnet50_3x3-cifar10/model_2.pt",
         transforms=ImageClassificationEval,
         meta={
             **_COMMON_META_CIFAR10,
@@ -681,7 +681,7 @@ class ResNet50_3x3_Weights(WeightsEnum):
                       "/tree/main/tools/cifar#resnet",
             "_metrics": {
                 "CIFAR10": {
-                    "acc@1": 0.559,
+                    "acc@1": 0.923,
                 }
             },
             "_docs": """These weights reproduce closely the results of the 
@@ -690,7 +690,7 @@ class ResNet50_3x3_Weights(WeightsEnum):
     )
     CIFAR100_s0 = Weights(
         url="http://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
-            "/resnet18-cifar100/model_0.pt",
+            "/resnet50_3x3-cifar100/model_0.pt",
         transforms=ImageClassificationEval,
         meta={
             **_COMMON_META_CIFAR100,
@@ -699,7 +699,7 @@ class ResNet50_3x3_Weights(WeightsEnum):
                       "/tree/main/tools/cifar#resnet",
             "_metrics": {
                 "CIFAR100": {
-                    "acc@1": 0.556,
+                    "acc@1": 0.642,
                 }
             },
             "_docs": """These weights reproduce closely the results of the 
@@ -708,7 +708,7 @@ class ResNet50_3x3_Weights(WeightsEnum):
     )
     CIFAR100_s1 = Weights(
         url="http://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
-            "/resnet18-cifar100/model_1.pt",
+            "/resnet50_3x3-cifar100/model_1.pt",
         transforms=ImageClassificationEval,
         meta={
             **_COMMON_META_CIFAR100,
@@ -717,7 +717,7 @@ class ResNet50_3x3_Weights(WeightsEnum):
                       "/tree/main/tools/cifar#resnet",
             "_metrics": {
                 "CIFAR100": {
-                    "acc@1": 0.552,
+                    "acc@1": 0.671,
                 }
             },
             "_docs": """These weights reproduce closely the results of the 
@@ -726,7 +726,7 @@ class ResNet50_3x3_Weights(WeightsEnum):
     )
     CIFAR100_s2 = Weights(
         url="http://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
-            "/resnet18-cifar100/model_2.pt",
+            "/resnet50_3x3-cifar100/model_2.pt",
         transforms=ImageClassificationEval,
         meta={
             **_COMMON_META_CIFAR100,
@@ -735,7 +735,7 @@ class ResNet50_3x3_Weights(WeightsEnum):
                       "/tree/main/tools/cifar#resnet",
             "_metrics": {
                 "CIFAR100": {
-                    "acc@1": 0.559,
+                    "acc@1": 0.652,
                 }
             },
             "_docs": """These weights reproduce closely the results of the 
@@ -748,7 +748,7 @@ class ResNet50_3x3_Weights(WeightsEnum):
 class ResNet34_3x3_Weights(WeightsEnum):
     CIFAR10_s0 = Weights(
         url="http://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
-            "/resnet18-cifar100/model_0.pt",
+            "/resnet34_3x3-cifar10/model_0.pt",
         transforms=ImageClassificationEval,
         meta={
             **_COMMON_META_CIFAR10,
@@ -757,7 +757,7 @@ class ResNet34_3x3_Weights(WeightsEnum):
                       "/tree/main/tools/cifar#resnet",
             "_metrics": {
                 "CIFAR10": {
-                    "acc@1": 0.556,
+                    "acc@1": 0.927,
                 }
             },
             "_docs": """These weights reproduce closely the results of the 
@@ -766,7 +766,7 @@ class ResNet34_3x3_Weights(WeightsEnum):
     )
     CIFAR10_s1 = Weights(
         url="http://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
-            "/resnet18-cifar100/model_1.pt",
+            "/resnet34_3x3-cifar10/model_1.pt",
         transforms=ImageClassificationEval,
         meta={
             **_COMMON_META_CIFAR10,
@@ -775,7 +775,7 @@ class ResNet34_3x3_Weights(WeightsEnum):
                       "/tree/main/tools/cifar#resnet",
             "_metrics": {
                 "CIFAR10": {
-                    "acc@1": 0.552,
+                    "acc@1": 0.924,
                 }
             },
             "_docs": """These weights reproduce closely the results of the 
@@ -784,7 +784,7 @@ class ResNet34_3x3_Weights(WeightsEnum):
     )
     CIFAR10_s2 = Weights(
         url="http://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
-            "/resnet18-cifar100/model_2.pt",
+            "/resnet34_3x3-cifar10/model_2.pt",
         transforms=ImageClassificationEval,
         meta={
             **_COMMON_META_CIFAR10,
@@ -793,7 +793,7 @@ class ResNet34_3x3_Weights(WeightsEnum):
                       "/tree/main/tools/cifar#resnet",
             "_metrics": {
                 "CIFAR10": {
-                    "acc@1": 0.559,
+                    "acc@1": 0.925,
                 }
             },
             "_docs": """These weights reproduce closely the results of the 
@@ -802,7 +802,7 @@ class ResNet34_3x3_Weights(WeightsEnum):
     )
     CIFAR100_s0 = Weights(
         url="http://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
-            "/resnet18-cifar100/model_0.pt",
+            "/resnet34_3x3-cifar100/model_0.pt",
         transforms=ImageClassificationEval,
         meta={
             **_COMMON_META_CIFAR100,
@@ -811,7 +811,7 @@ class ResNet34_3x3_Weights(WeightsEnum):
                       "/tree/main/tools/cifar#resnet",
             "_metrics": {
                 "CIFAR100": {
-                    "acc@1": 0.556,
+                    "acc@1": 0.656,
                 }
             },
             "_docs": """These weights reproduce closely the results of the 
@@ -820,7 +820,7 @@ class ResNet34_3x3_Weights(WeightsEnum):
     )
     CIFAR100_s1 = Weights(
         url="http://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
-            "/resnet18-cifar100/model_1.pt",
+            "/resnet34_3x3-cifar100/model_1.pt",
         transforms=ImageClassificationEval,
         meta={
             **_COMMON_META_CIFAR100,
@@ -829,7 +829,7 @@ class ResNet34_3x3_Weights(WeightsEnum):
                       "/tree/main/tools/cifar#resnet",
             "_metrics": {
                 "CIFAR100": {
-                    "acc@1": 0.552,
+                    "acc@1": 0.638,
                 }
             },
             "_docs": """These weights reproduce closely the results of the 
@@ -838,7 +838,7 @@ class ResNet34_3x3_Weights(WeightsEnum):
     )
     CIFAR100_s2 = Weights(
         url="http://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
-            "/resnet18-cifar100/model_2.pt",
+            "/resnet34_3x3-cifar100/model_2.pt",
         transforms=ImageClassificationEval,
         meta={
             **_COMMON_META_CIFAR100,
@@ -847,7 +847,7 @@ class ResNet34_3x3_Weights(WeightsEnum):
                       "/tree/main/tools/cifar#resnet",
             "_metrics": {
                 "CIFAR100": {
-                    "acc@1": 0.559,
+                    "acc@1": 0.653,
                 }
             },
             "_docs": """These weights reproduce closely the results of the 
@@ -860,7 +860,7 @@ class ResNet34_3x3_Weights(WeightsEnum):
 class ResNet34_Weights(WeightsEnum):
     CIFAR100_s0 = Weights(
         url="http://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
-            "/resnet18-cifar100/model_0.pt",
+            "/resnet34-cifar100/model_0.pt",
         transforms=ImageClassificationEval,
         meta={
             **_COMMON_META_CIFAR100,
@@ -869,7 +869,7 @@ class ResNet34_Weights(WeightsEnum):
                       "/tree/main/tools/cifar#resnet",
             "_metrics": {
                 "CIFAR100": {
-                    "acc@1": 0.556,
+                    "acc@1": 0.558,
                 }
             },
             "_docs": """These weights reproduce closely the results of the 
@@ -878,7 +878,7 @@ class ResNet34_Weights(WeightsEnum):
     )
     CIFAR100_s1 = Weights(
         url="http://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
-            "/resnet18-cifar100/model_1.pt",
+            "/resnet34-cifar100/model_1.pt",
         transforms=ImageClassificationEval,
         meta={
             **_COMMON_META_CIFAR100,
@@ -887,7 +887,7 @@ class ResNet34_Weights(WeightsEnum):
                       "/tree/main/tools/cifar#resnet",
             "_metrics": {
                 "CIFAR100": {
-                    "acc@1": 0.552,
+                    "acc@1": 0.569,
                 }
             },
             "_docs": """These weights reproduce closely the results of the 
@@ -896,7 +896,7 @@ class ResNet34_Weights(WeightsEnum):
     )
     CIFAR100_s2 = Weights(
         url="http://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
-            "/resnet18-cifar100/model_2.pt",
+            "/resnet34-cifar100/model_2.pt",
         transforms=ImageClassificationEval,
         meta={
             **_COMMON_META_CIFAR100,
@@ -905,7 +905,7 @@ class ResNet34_Weights(WeightsEnum):
                       "/tree/main/tools/cifar#resnet",
             "_metrics": {
                 "CIFAR100": {
-                    "acc@1": 0.559,
+                    "acc@1": 0.568,
                 }
             },
             "_docs": """These weights reproduce closely the results of the 
@@ -914,7 +914,7 @@ class ResNet34_Weights(WeightsEnum):
     )
     CIFAR10_s0 = Weights(
         url="http://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
-            "/resnet18-cifar100/model_0.pt",
+            "/resnet34-cifar10/model_0.pt",
         transforms=ImageClassificationEval,
         meta={
             **_COMMON_META_CIFAR10,
@@ -923,7 +923,7 @@ class ResNet34_Weights(WeightsEnum):
                       "/tree/main/tools/cifar#resnet",
             "_metrics": {
                 "CIFAR10": {
-                    "acc@1": 0.556,
+                    "acc@1": 0.867,
                 }
             },
             "_docs": """These weights reproduce closely the results of the 
@@ -932,7 +932,7 @@ class ResNet34_Weights(WeightsEnum):
     )
     CIFAR10_s1 = Weights(
         url="http://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
-            "/resnet18-cifar100/model_1.pt",
+            "/resnet34-cifar10/model_1.pt",
         transforms=ImageClassificationEval,
         meta={
             **_COMMON_META_CIFAR10,
@@ -941,7 +941,7 @@ class ResNet34_Weights(WeightsEnum):
                       "/tree/main/tools/cifar#resnet",
             "_metrics": {
                 "CIFAR10": {
-                    "acc@1": 0.552,
+                    "acc@1": 0.871,
                 }
             },
             "_docs": """These weights reproduce closely the results of the 
@@ -950,7 +950,7 @@ class ResNet34_Weights(WeightsEnum):
     )
     CIFAR10_s2 = Weights(
         url="http://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
-            "/resnet18-cifar100/model_2.pt",
+            "/resnet34-cifar10/model_2.pt",
         transforms=ImageClassificationEval,
         meta={
             **_COMMON_META_CIFAR10,
@@ -959,7 +959,7 @@ class ResNet34_Weights(WeightsEnum):
                       "/tree/main/tools/cifar#resnet",
             "_metrics": {
                 "CIFAR10": {
-                    "acc@1": 0.559,
+                    "acc@1": 0.870,
                 }
             },
             "_docs": """These weights reproduce closely the results of the 
@@ -972,7 +972,7 @@ class ResNet34_Weights(WeightsEnum):
 class ResNet152_Weights(WeightsEnum):
     CIFAR100_s0 = Weights(
         url="http://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
-            "/resnet18-cifar100/model_0.pt",
+            "/resnet152-cifar100/model_0.pt",
         transforms=ImageClassificationEval,
         meta={
             **_COMMON_META_CIFAR100,
@@ -981,7 +981,7 @@ class ResNet152_Weights(WeightsEnum):
                       "/tree/main/tools/cifar#resnet",
             "_metrics": {
                 "CIFAR100": {
-                    "acc@1": 0.556,
+                    "acc@1": 0.496,
                 }
             },
             "_docs": """These weights reproduce closely the results of the 
@@ -990,7 +990,7 @@ class ResNet152_Weights(WeightsEnum):
     )
     CIFAR100_s1 = Weights(
         url="http://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
-            "/resnet18-cifar100/model_1.pt",
+            "/resnet152-cifar100/model_1.pt",
         transforms=ImageClassificationEval,
         meta={
             **_COMMON_META_CIFAR100,
@@ -999,7 +999,7 @@ class ResNet152_Weights(WeightsEnum):
                       "/tree/main/tools/cifar#resnet",
             "_metrics": {
                 "CIFAR100": {
-                    "acc@1": 0.552,
+                    "acc@1": 0.507,
                 }
             },
             "_docs": """These weights reproduce closely the results of the 
@@ -1008,7 +1008,7 @@ class ResNet152_Weights(WeightsEnum):
     )
     CIFAR100_s2 = Weights(
         url="http://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
-            "/resnet18-cifar100/model_2.pt",
+            "/resnet152-cifar100/model_2.pt",
         transforms=ImageClassificationEval,
         meta={
             **_COMMON_META_CIFAR100,
@@ -1017,7 +1017,7 @@ class ResNet152_Weights(WeightsEnum):
                       "/tree/main/tools/cifar#resnet",
             "_metrics": {
                 "CIFAR100": {
-                    "acc@1": 0.559,
+                    "acc@1": 0.553,
                 }
             },
             "_docs": """These weights reproduce closely the results of the 
@@ -1026,7 +1026,7 @@ class ResNet152_Weights(WeightsEnum):
     )
     CIFAR10_s0 = Weights(
         url="http://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
-            "/resnet18-cifar100/model_0.pt",
+            "/resnet152-cifar10/model_0.pt",
         transforms=ImageClassificationEval,
         meta={
             **_COMMON_META_CIFAR10,
@@ -1035,7 +1035,7 @@ class ResNet152_Weights(WeightsEnum):
                       "/tree/main/tools/cifar#resnet",
             "_metrics": {
                 "CIFAR10": {
-                    "acc@1": 0.556,
+                    "acc@1": 0.865,
                 }
             },
             "_docs": """These weights reproduce closely the results of the 
@@ -1044,7 +1044,7 @@ class ResNet152_Weights(WeightsEnum):
     )
     CIFAR10_s1 = Weights(
         url="http://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
-            "/resnet18-cifar100/model_1.pt",
+            "/resnet152-cifar10/model_1.pt",
         transforms=ImageClassificationEval,
         meta={
             **_COMMON_META_CIFAR10,
@@ -1053,7 +1053,7 @@ class ResNet152_Weights(WeightsEnum):
                       "/tree/main/tools/cifar#resnet",
             "_metrics": {
                 "CIFAR10": {
-                    "acc@1": 0.552,
+                    "acc@1": 0.868,
                 }
             },
             "_docs": """These weights reproduce closely the results of the 
@@ -1062,7 +1062,7 @@ class ResNet152_Weights(WeightsEnum):
     )
     CIFAR10_s2 = Weights(
         url="http://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
-            "/resnet18-cifar100/model_2.pt",
+            "/resnet152-cifar10/model_2.pt",
         transforms=ImageClassificationEval,
         meta={
             **_COMMON_META_CIFAR10,
@@ -1071,7 +1071,7 @@ class ResNet152_Weights(WeightsEnum):
                       "/tree/main/tools/cifar#resnet",
             "_metrics": {
                 "CIFAR10": {
-                    "acc@1": 0.559,
+                    "acc@1": 0.875,
                 }
             },
             "_docs": """These weights reproduce closely the results of the 
@@ -1084,7 +1084,7 @@ class ResNet152_Weights(WeightsEnum):
 class ResNet101_Weights(WeightsEnum):
     CIFAR10_s0 = Weights(
         url="http://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
-            "/resnet18-cifar100/model_0.pt",
+            "/resnet101-cifar10/model_0.pt",
         transforms=ImageClassificationEval,
         meta={
             **_COMMON_META_CIFAR10,
@@ -1093,7 +1093,7 @@ class ResNet101_Weights(WeightsEnum):
                       "/tree/main/tools/cifar#resnet",
             "_metrics": {
                 "CIFAR10": {
-                    "acc@1": 0.556,
+                    "acc@1": 0.879,
                 }
             },
             "_docs": """These weights reproduce closely the results of the 
@@ -1102,7 +1102,7 @@ class ResNet101_Weights(WeightsEnum):
     )
     CIFAR10_s1 = Weights(
         url="http://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
-            "/resnet18-cifar100/model_1.pt",
+            "/resnet101-cifar10/model_1.pt",
         transforms=ImageClassificationEval,
         meta={
             **_COMMON_META_CIFAR10,
@@ -1111,7 +1111,7 @@ class ResNet101_Weights(WeightsEnum):
                       "/tree/main/tools/cifar#resnet",
             "_metrics": {
                 "CIFAR10": {
-                    "acc@1": 0.552,
+                    "acc@1": 0.871,
                 }
             },
             "_docs": """These weights reproduce closely the results of the 
@@ -1120,7 +1120,7 @@ class ResNet101_Weights(WeightsEnum):
     )
     CIFAR10_s2 = Weights(
         url="http://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
-            "/resnet18-cifar100/model_2.pt",
+            "/resnet101-cifar10/model_2.pt",
         transforms=ImageClassificationEval,
         meta={
             **_COMMON_META_CIFAR10,
@@ -1129,7 +1129,7 @@ class ResNet101_Weights(WeightsEnum):
                       "/tree/main/tools/cifar#resnet",
             "_metrics": {
                 "CIFAR10": {
-                    "acc@1": 0.559,
+                    "acc@1": 0.872,
                 }
             },
             "_docs": """These weights reproduce closely the results of the 
@@ -1138,7 +1138,7 @@ class ResNet101_Weights(WeightsEnum):
     )
     CIFAR100_s0 = Weights(
         url="http://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
-            "/resnet18-cifar100/model_0.pt",
+            "/resnet101-cifar100/model_0.pt",
         transforms=ImageClassificationEval,
         meta={
             **_COMMON_META_CIFAR100,
@@ -1147,7 +1147,7 @@ class ResNet101_Weights(WeightsEnum):
                       "/tree/main/tools/cifar#resnet",
             "_metrics": {
                 "CIFAR100": {
-                    "acc@1": 0.556,
+                    "acc@1": 0.502,
                 }
             },
             "_docs": """These weights reproduce closely the results of the 
@@ -1156,7 +1156,7 @@ class ResNet101_Weights(WeightsEnum):
     )
     CIFAR100_s1 = Weights(
         url="http://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
-            "/resnet18-cifar100/model_1.pt",
+            "/resnet101-cifar100/model_1.pt",
         transforms=ImageClassificationEval,
         meta={
             **_COMMON_META_CIFAR100,
@@ -1165,7 +1165,7 @@ class ResNet101_Weights(WeightsEnum):
                       "/tree/main/tools/cifar#resnet",
             "_metrics": {
                 "CIFAR100": {
-                    "acc@1": 0.552,
+                    "acc@1": 0.540,
                 }
             },
             "_docs": """These weights reproduce closely the results of the 
@@ -1174,7 +1174,7 @@ class ResNet101_Weights(WeightsEnum):
     )
     CIFAR100_s2 = Weights(
         url="http://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
-            "/resnet18-cifar100/model_2.pt",
+            "/resnet101-cifar100/model_2.pt",
         transforms=ImageClassificationEval,
         meta={
             **_COMMON_META_CIFAR100,
@@ -1183,7 +1183,7 @@ class ResNet101_Weights(WeightsEnum):
                       "/tree/main/tools/cifar#resnet",
             "_metrics": {
                 "CIFAR100": {
-                    "acc@1": 0.559,
+                    "acc@1": 0.543,
                 }
             },
             "_docs": """These weights reproduce closely the results of the 
