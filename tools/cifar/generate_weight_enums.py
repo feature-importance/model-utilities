@@ -1,7 +1,9 @@
 from torchvision.datasets import CIFAR10, CIFAR100
 
 from model_utilities.models.cifar_resnet import *
+from model_utilities.models.cifar_vgg import *
 from torchvision.models.resnet import *
+from torchvision.models.vgg import *
 import os
 
 
@@ -51,6 +53,7 @@ if __name__ == '__main__':
 
     for model in model_dataset.keys():
         ccmodel = model.replace("resnet", "ResNet")
+        ccmodel = model.replace("vgg", "VGG")
 
         print(f"class {ccmodel}_Weights(WeightsEnum):")
 
