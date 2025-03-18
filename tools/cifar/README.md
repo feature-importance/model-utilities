@@ -17,70 +17,86 @@ schedule:
 
 We've trained 3 seeds of each model on both CIFAR-10 and CIFAR-100:
 
-| Dataset  | Model         | Seed | Val. Acc.   |
-| -------- | ------------- | ---- | ----------- |
-| cifar10  | resnet18_3x3  | 0    | 0.915699959 |
-| cifar10  | resnet18_3x3  | 1    | 0.923299968 |
-| cifar10  | resnet18_3x3  | 2    | 0.922099948 |
-| cifar10  | resnet34_3x3  | 0    | 0.926799953 |
-| cifar10  | resnet34_3x3  | 1    | 0.923500001 |
-| cifar10  | resnet34_3x3  | 2    | 0.924600005 |
-| cifar10  | resnet50_3x3  | 0    | 0.926299989 |
-| cifar10  | resnet50_3x3  | 1    | 0.932899952 |
-| cifar10  | resnet50_3x3  | 2    | 0.922699988 |
-| cifar10  | resnet101_3x3 | 0    | 0.932399988 |
-| cifar10  | resnet101_3x3 | 1    | 0.9199      |
-| cifar10  | resnet101_3x3 | 2    | 0.92809999  |
-| cifar10  | resnet152_3x3 | 0    | 0.920299947 |
-| cifar10  | resnet152_3x3 | 1    | 0.921999991 |
-| cifar10  | resnet152_3x3 | 2    | 0.9278      |
-| cifar10  | resnet18      | 0    | 0.871599972 |
-| cifar10  | resnet18      | 1    | 0.866999984 |
-| cifar10  | resnet18      | 2    | 0.869099975 |
-| cifar10  | resnet34      | 0    | 0.866599977 |
-| cifar10  | resnet34      | 1    | 0.870799959 |
-| cifar10  | resnet34      | 2    | 0.869899988 |
-| cifar10  | resnet50      | 0    | 0.872099996 |
-| cifar10  | resnet50      | 1    | 0.879399955 |
-| cifar10  | resnet50      | 2    | 0.879999995 |
-| cifar10  | resnet101     | 0    | 0.879099965 |
-| cifar10  | resnet101     | 1    | 0.870700002 |
-| cifar10  | resnet101     | 2    | 0.871800005 |
-| cifar10  | resnet152     | 0    | 0.864600003 |
-| cifar10  | resnet152     | 1    | 0.868200004 |
-| cifar10  | resnet152     | 2    | 0.87469995  |
-| cifar100 | resnet18_3x3  | 0    | 0.656599998 |
-| cifar100 | resnet18_3x3  | 1    | 0.664799988 |
-| cifar100 | resnet18_3x3  | 2    | 0.659799993 |
-| cifar100 | resnet34_3x3  | 0    | 0.656499982 |
-| cifar100 | resnet34_3x3  | 1    | 0.638499975 |
-| cifar100 | resnet34_3x3  | 2    | 0.65259999  |
-| cifar100 | resnet50_3x3  | 0    | 0.64230001  |
-| cifar100 | resnet50_3x3  | 1    | 0.671099961 |
-| cifar100 | resnet50_3x3  | 2    | 0.65200001  |
-| cifar100 | resnet101_3x3 | 0    | 0.648599982 |
-| cifar100 | resnet101_3x3 | 1    | 0.613099992 |
-| cifar100 | resnet101_3x3 | 2    | 0.666399956 |
-| cifar100 | resnet152_3x3 | 0    | 0.657700002 |
-| cifar100 | resnet152_3x3 | 1    | 0.647099972 |
-| cifar100 | resnet152_3x3 | 2    | 0.619699955 |
-| cifar100 | resnet18      | 0    | 0.556299984 |
-| cifar100 | resnet18      | 1    | 0.551800013 |
-| cifar100 | resnet18      | 2    | 0.559099972 |
-| cifar100 | resnet34      | 0    | 0.558200002 |
-| cifar100 | resnet34      | 1    | 0.569499969 |
-| cifar100 | resnet34      | 2    | 0.568499982 |
-| cifar100 | resnet50      | 0    | 0.546999991 |
-| cifar100 | resnet50      | 1    | 0.546499968 |
-| cifar100 | resnet50      | 2    | 0.526199996 |
-| cifar100 | resnet101     | 0    | 0.501599967 |
-| cifar100 | resnet101     | 1    | 0.540199995 |
-| cifar100 | resnet101     | 2    | 0.543099999 |
-| cifar100 | resnet152     | 0    | 0.495599985 |
-| cifar100 | resnet152     | 1    | 0.507099986 |
-| cifar100 | resnet152     | 2    | 0.552699983 |
+| Dataset  | Model         | Seed | Val. Acc. |
+|----------|---------------|------|-----------|
+| cifar10  | resnet18_3x3  | 0    | 0.915     |
+| cifar10  | resnet18_3x3  | 1    | 0.923     |
+| cifar10  | resnet18_3x3  | 2    | 0.922     |
+| cifar10  | resnet34_3x3  | 0    | 0.926     |
+| cifar10  | resnet34_3x3  | 1    | 0.923     |
+| cifar10  | resnet34_3x3  | 2    | 0.924     |
+| cifar10  | resnet50_3x3  | 0    | 0.926     |
+| cifar10  | resnet50_3x3  | 1    | 0.932     |
+| cifar10  | resnet50_3x3  | 2    | 0.922     |
+| cifar10  | resnet101_3x3 | 0    | 0.932     |
+| cifar10  | resnet101_3x3 | 1    | 0.9       |
+| cifar10  | resnet101_3x3 | 2    | 0.928     |
+| cifar10  | resnet152_3x3 | 0    | 0.920     |
+| cifar10  | resnet152_3x3 | 1    | 0.921     |
+| cifar10  | resnet152_3x3 | 2    | 0.9       |
+| cifar10  | resnet18      | 0    | 0.871     |
+| cifar10  | resnet18      | 1    | 0.866     |
+| cifar10  | resnet18      | 2    | 0.869     |
+| cifar10  | resnet34      | 0    | 0.866     |
+| cifar10  | resnet34      | 1    | 0.870     |
+| cifar10  | resnet34      | 2    | 0.869     |
+| cifar10  | resnet50      | 0    | 0.872     |
+| cifar10  | resnet50      | 1    | 0.879     |
+| cifar10  | resnet50      | 2    | 0.879     |
+| cifar10  | resnet101     | 0    | 0.879     |
+| cifar10  | resnet101     | 1    | 0.870     |
+| cifar10  | resnet101     | 2    | 0.871     |
+| cifar10  | resnet152     | 0    | 0.864     |
+| cifar10  | resnet152     | 1    | 0.868     |
+| cifar10  | resnet152     | 2    | 0.874     |
+| cifar100 | resnet18_3x3  | 0    | 0.656     |
+| cifar100 | resnet18_3x3  | 1    | 0.664     |
+| cifar100 | resnet18_3x3  | 2    | 0.659     |
+| cifar100 | resnet34_3x3  | 0    | 0.656     |
+| cifar100 | resnet34_3x3  | 1    | 0.638     |
+| cifar100 | resnet34_3x3  | 2    | 0.652     |
+| cifar100 | resnet50_3x3  | 0    | 0.642     |
+| cifar100 | resnet50_3x3  | 1    | 0.671     |
+| cifar100 | resnet50_3x3  | 2    | 0.652     |
+| cifar100 | resnet101_3x3 | 0    | 0.648     |
+| cifar100 | resnet101_3x3 | 1    | 0.613     |
+| cifar100 | resnet101_3x3 | 2    | 0.666     |
+| cifar100 | resnet152_3x3 | 0    | 0.657     |
+| cifar100 | resnet152_3x3 | 1    | 0.647     |
+| cifar100 | resnet152_3x3 | 2    | 0.619     |
+| cifar100 | resnet18      | 0    | 0.556     |
+| cifar100 | resnet18      | 1    | 0.551     |
+| cifar100 | resnet18      | 2    | 0.559     |
+| cifar100 | resnet34      | 0    | 0.558     |
+| cifar100 | resnet34      | 1    | 0.569     |
+| cifar100 | resnet34      | 2    | 0.568     |
+| cifar100 | resnet50      | 0    | 0.546     |
+| cifar100 | resnet50      | 1    | 0.546     |
+| cifar100 | resnet50      | 2    | 0.526     |
+| cifar100 | resnet101     | 0    | 0.501     |
+| cifar100 | resnet101     | 1    | 0.540     |
+| cifar100 | resnet101     | 2    | 0.543     |
+| cifar100 | resnet152     | 0    | 0.495     |
+| cifar100 | resnet152     | 1    | 0.507     |
+| cifar100 | resnet152     | 2    | 0.552     |
+
 
 # VGG models
 <a name="vgg"></a>
+
+| Dataset   | Model | Seed | Val. Acc. |
+|-----------|-------|------|-----------|
+| cifar10   | vgg16 | 0    | 0.916     |
+| cifar10   | vgg16 | 1    | 0.916     |
+| cifar10   | vgg16 | 2    | 0.916     |
+| cifar10   | vgg19 | 0    | 0.912     |
+| cifar10   | vgg19 | 1    | 0.914     |
+| cifar10   | vgg19 | 2    | 0.912     |
+| cifar100  | vgg16 | 0    | 0.653     |
+| cifar100  | vgg16 | 1    | 0.655     |
+| cifar100  | vgg16 | 2    | 0.661     |
+| cifar100  | vgg19 | 0    | 0.662     |
+| cifar100  | vgg19 | 1    | 0.657     |
+| cifar100  | vgg19 | 2    | 0.659     |
 
 # ...
