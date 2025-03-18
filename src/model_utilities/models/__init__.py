@@ -33,6 +33,8 @@ _COMMON_META_CIFAR100 = {
 }
 
 
+# We patch the enum so that it allows us to use the original model and
+# correctly handles our models.
 def verify(cls, obj: Any) -> Any:
     if obj is not None:
         if type(obj) is str:
