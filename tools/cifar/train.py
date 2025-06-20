@@ -57,6 +57,8 @@ def get_args_parser(add_help=True):
                         type=float, metavar="W",
                         help="weight decay (default: 1e-4)",
                         dest="weight_decay")
+    parser.add_argument("--verbosity", default=1, type=int,
+                        metavar="V", help="verbosity level for stdout logging")
 
     return parser
 
@@ -146,9 +148,10 @@ def main():
                               f"model_{args.seed}.pt")
 
     fit_model(model, criterion, opt, train_data_loader, val_data_loader,
-              epochs=args.epochs, device='auto', verbose=1, acc='acc',
-              model_file=model_file, run_id=run_id, log_dir=args.log_dir,
-              resume=args.resume, period=None, schedule=schedule)
+              epochs=args.epochs, device='auto', verbose=args.verbosity,
+              acc='acc', model_file=model_file, run_id=run_id,
+              log_dir=args.log_dir, resume=args.resume, period=None,
+              schedule=schedule)
 
     save_args(os.path.dirname(model_file),
               os.path.basename(model_file).replace(".pt", "-cmd.txt"))
