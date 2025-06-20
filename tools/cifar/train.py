@@ -30,7 +30,7 @@ def get_args_parser(add_help=True):
                         help='log directory for tensorboard. CSV logs will be '
                              'saved in the output directory.')
     parser.add_argument('--data-dir', type=str,
-                        default="/scratch/jsh2/datasets")
+                        default="/iridisfs/vlcgroup/vision_datasets")
     parser.add_argument("--output-dir", default=".", type=str,
                         help="path to save outputs")
 
