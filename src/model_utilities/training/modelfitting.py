@@ -1,7 +1,6 @@
 import json
 import os
 import random
-import sys
 from datetime import datetime
 
 import numpy as np
@@ -9,9 +8,8 @@ import pandas as pd
 import torch
 import torchbearer
 
-from model_utilities.training.schedule import ManualLR
 from model_utilities.training.utils import save_model_info
-from torchbearer import Trial, Callback
+from torchbearer import Trial
 from torchbearer.callbacks import TensorBoard, TensorBoardText, MultiStepLR, \
     TorchScheduler, CSVLogger
 
@@ -227,76 +225,4 @@ def load_model(model_file, model, device='auto'):
 
     return model
 
-
-def _parse_schedule(sched):
-    if "<@" in sched:
-        return ManualLR.parse(sched)
-
-    if '@' in sched:
-        factor, schtype = sched.split('@')
-        factor = float(factor)
-    else:
-        factor, schtype = None, sched
-
-    step_on_batch = False
-    if schtype.endswith('B') or schtype.endswith('b'):
-        step_on_batch = True
-        schtype = schtype[:-1]
-
-    if schtype.startswith('every'):
-        step = int(schtype[5:])
-        return torchbearer.callbacks.StepLR(step, gamma=factor,
-                                            step_on_batch=step_on_batch)
-    if schtype.startswith('inv'):
-        gamma, power = (float(i) for i in schtype[3:].split(","))
-        return torchbearer.callbacks.LambdaLR(
-            lambda i: (1 + gamma * i) ** (- power), step_on_batch=step_on_batch)
-    elif schtype.startswith('['):
-        milestones = json.loads(schtype)
-        return torchbearer.callbacks.MultiStepLR(milestones, gamma=factor,
-                                                 step_on_batch=step_on_batch)
-    elif schtype == 'plateau':
-        return torchbearer.callbacks.ReduceLROnPlateau(factor=factor,
-                                                       step_on_batch=step_on_batch)
-
-    assert False
-
-
-def parse_learning_rate_arg(learning_rate: str):
-    """
-    Parse a learning rate argument into an initial rate and an optional
-    scheduler callback.
-
-    Examples:
-        0.1                        --  fixed lr
-        0.1*0.2@every10            --  decrease by factor=0.2 every 10 epochs
-        0.1*0.2@every10B           --  decrease by factor=0.2 every 10 epochs
-        0.1*0.2@[10,30,80]         --  decrease by factor=0.2 at epochs 10,
-        30, and 80
-        0.1*0.2@[10,30,80]B        --  decrease by factor=0.2 at epochs 10,
-        30, and 80
-        0.1*0.2@plateau            --  decrease by factor=0.2 on validation
-        plateau
-        0.1*inv0.0001,0.75B        --  decrease by using the old caffe inv
-        rule each batch
-        0.01<@10,0.1<@20,0.01      --  manual lr
-
-    Args:
-        learning_rate: lr string
-
-    Returns:
-        tuple of init_lr, callback
-    """
-
-    if "<@" in learning_rate:
-        sch = _parse_schedule(learning_rate)
-        return float(learning_rate.split("<@")[0]), sch
-
-    sp = str(learning_rate).split('*')
-    initial = float(sp[0])
-
-    if len(sp) == 1:
-        return initial, None
-    elif len(sp) == 2:
-        return initial, _parse_schedule(sp[1])
 

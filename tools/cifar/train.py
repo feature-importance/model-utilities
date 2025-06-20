@@ -11,7 +11,8 @@ import torchvision
 from model_utilities.models.cifar_resnet import resnet18_3x3, resnet34_3x3, \
     resnet50_3x3, resnet101_3x3, resnet152_3x3
 from model_utilities.training.modelfitting import fit_model, set_seed, \
-    get_device, parse_learning_rate_arg
+    get_device
+from model_utilities.training.schedule import parse_learning_rate_arg
 from model_utilities.training.utils import save_args
 from model_utilities.transforms._cifar_presets import \
     ImageClassificationTraining, ImageClassificationEval
