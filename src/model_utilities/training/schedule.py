@@ -1,13 +1,13 @@
 import functools
 import json
-from collections import Counter
-from typing import Iterable, List
+from typing import List, Callable
 
+import torch.optim.lr_scheduler
 import torchbearer
 from torch.optim import Optimizer
 from torch.optim.lr_scheduler import LRScheduler, SequentialLR
-from torchbearer import Trial
 from torchbearer.callbacks import TorchScheduler
+
 
 class StaticLR(LRScheduler):
     """Purely static learning rate.
@@ -18,17 +18,34 @@ class StaticLR(LRScheduler):
         last_epoch (int): The index of last epoch. Default: -1.
     """
 
-    def __init__(
-        self,
-        optimizer: Optimizer,
-        rate: float,
-        last_epoch: int = -1,
-    ):
+    def __init__(self, optimizer: Optimizer, rate: float, last_epoch: int = -1):
         self.rate = rate
         super().__init__(optimizer, last_epoch)
 
     def get_lr(self):
         return [self.rate for _ in self.optimizer.param_groups]
+
+
+class LazySequentialLR(SequentialLR):
+    """
+    Extension to SequentialLR that allows for schedulers to be specified in the form of functions that will return
+    the scheduler from the respective optimiser. This allows lazy instantiation of individual schedulers in the
+    case that you don't immediately have access to the optimiser.
+
+    Args:
+        optimizer (Optimizer): Wrapped optimizer.
+        schedulers (list): List of chained schedulers.
+        milestones (list): List of integers that reflects milestone points.
+        last_epoch (int): The index of last epoch. Default: -1.
+    """
+
+    def __init__(self,
+                 optimizer: Optimizer,
+                 schedulers: List[Callable[[Optimizer], LRScheduler]],
+                 milestones: List[int],
+                 last_epoch: int = -1):
+        schedulers = [s(optimizer) for s in schedulers]
+        super().__init__(optimizer, schedulers, milestones, last_epoch)
 
 
 class ManualLR(TorchScheduler):
@@ -39,14 +56,13 @@ class ManualLR(TorchScheduler):
     See:
         `ManualLRSchedule`_
     """
+
     def __init__(self,
-                 schedulers: Iterable[LRScheduler],
+                 schedulers: List[Callable[[Optimizer], LRScheduler]],
                  milestones: List[int],
                  step_on_batch=False):
-        super().__init__(functools.partial(SequentialLR,
-                                           schedulers=schedulers,
-                                           milestones=milestones),
-                                            step_on_batch=step_on_batch)
+        super().__init__(functools.partial(LazySequentialLR, schedulers=schedulers, milestones=milestones),
+                         step_on_batch=step_on_batch)
 
     @classmethod
     def parse(cls, sched):
@@ -57,14 +73,21 @@ class ManualLR(TorchScheduler):
             if "<@" in s:
                 r, m = s.split("<@")
                 milestones.append(int(m))
-                schedulers.append(StaticLR(float(r)))
+
+                try:
+                    schedulers.append(functools.partial(StaticLR, rate=float(r)))
+                except ValueError:
+                    schedulers.append(_parse_schedule(r)._scheduler_builder)
             else:
-                schedulers.append(StaticLR(float(s)))
+                try:
+                    schedulers.append(functools.partial(StaticLR, rate=float(s)))
+                except ValueError:
+                    schedulers.append(_parse_schedule(s)._scheduler_builder)
 
-        if len(rates) == len(milestones):
-            rates = rates.append(rates[-1])
+        if len(schedulers) == len(milestones):
+            schedulers = schedulers.append(schedulers[-1])
 
-        return cls(milestones=milestones, rates=rates)
+        return cls(milestones=milestones, schedulers=schedulers)
 
 
 def _parse_schedule(sched):
@@ -84,19 +107,29 @@ def _parse_schedule(sched):
 
     if schtype.startswith('every'):
         step = int(schtype[5:])
-        return torchbearer.callbacks.StepLR(step, gamma=factor,
-                                            step_on_batch=step_on_batch)
+        if not step_on_batch:
+            return torchbearer.callbacks.StepLR(step, gamma=factor, step_on_batch=step_on_batch)
+        else:
+            # the step on batch code applies the update before the first batch (compared to the end of the epoch)
+            # so for consistency in making the init_lr behave sanely, we add an extra constant lr step
+            s1 = functools.partial(torch.optim.lr_scheduler.MultiplicativeLR, lr_lambda=lambda epoch: 1.0)
+            s2 = functools.partial(torch.optim.lr_scheduler.StepLR, step_size=step, gamma=factor)
+            return ManualLR([s1, s2], [step], step_on_batch=True)
     if schtype.startswith('inv'):
         gamma, power = (float(i) for i in schtype[3:].split(","))
-        return torchbearer.callbacks.LambdaLR(
-            lambda i: (1 + gamma * i) ** (- power), step_on_batch=step_on_batch)
+        if not step_on_batch:
+            return torchbearer.callbacks.LambdaLR(lambda i: (1 + gamma * i) ** (- power), step_on_batch=False)
+        else:
+            # the step on batch code applies the update before the first batch (compared to the end of the epoch)
+            # so for consistency in making the init_lr behave sanely, we add an extra constant lr step
+            s1 = functools.partial(torch.optim.lr_scheduler.MultiplicativeLR, lr_lambda=lambda epoch: 1.0)
+            s2 = functools.partial(torch.optim.lr_scheduler.LambdaLR, lr_lambda=lambda i: (1 + gamma * i) ** (- power))
+            return ManualLR([s1, s2], [1], step_on_batch=True)
     elif schtype.startswith('['):
         milestones = json.loads(schtype)
-        return torchbearer.callbacks.MultiStepLR(milestones, gamma=factor,
-                                                 step_on_batch=step_on_batch)
+        return torchbearer.callbacks.MultiStepLR(milestones, gamma=factor, step_on_batch=step_on_batch)
     elif schtype == 'plateau':
-        return torchbearer.callbacks.ReduceLROnPlateau(factor=factor,
-                                                       step_on_batch=step_on_batch)
+        return torchbearer.callbacks.ReduceLROnPlateau(factor=factor, step_on_batch=step_on_batch)
 
     assert False
 
@@ -109,15 +142,11 @@ def parse_learning_rate_arg(learning_rate: str):
     Examples:
         0.1                        --  fixed lr
         0.1*0.2@every10            --  decrease by factor=0.2 every 10 epochs
-        0.1*0.2@every10B           --  decrease by factor=0.2 every 10 epochs
-        0.1*0.2@[10,30,80]         --  decrease by factor=0.2 at epochs 10,
-        30, and 80
-        0.1*0.2@[10,30,80]B        --  decrease by factor=0.2 at epochs 10,
-        30, and 80
-        0.1*0.2@plateau            --  decrease by factor=0.2 on validation
-        plateau
-        0.1*inv0.0001,0.75B        --  decrease by using the old caffe inv
-        rule each batch
+        0.1*0.2@every10B           --  decrease by factor=0.2 every 10 batches
+        0.1*0.2@[10,30,80]         --  decrease by factor=0.2 at epochs 10, 30, and 80
+        0.1*0.2@[10,30,80]B        --  decrease by factor=0.2 at batches 10, 30, and 80
+        0.1*0.2@plateau            --  decrease by factor=0.2 on validation plateau
+        0.1*inv0.0001,0.75B        --  decrease by using the old caffe inv rule each batch
         0.01<@10,0.1<@20,0.01      --  manual lr
 
 
@@ -138,4 +167,6 @@ def parse_learning_rate_arg(learning_rate: str):
     if len(sp) == 1:
         return initial, None
     elif len(sp) == 2:
-        return initial, _parse_schedule(sp[1])
+        sched = _parse_schedule(sp[1])
+        return initial, sched
+    raise ValueError("Invalid learning rate string: " + learning_rate)
