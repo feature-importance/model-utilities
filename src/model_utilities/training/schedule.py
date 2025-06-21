@@ -95,9 +95,8 @@ def _parse_schedule(sched):
         return ManualLR.parse(sched)
 
     if "*" in sched:
-        print(sched)
+        # skip initlr
         sched = sched[sched.index("*") + 1:]
-        print(sched)
 
     if '@' in sched:
         factor, schtype = sched.split('@')
