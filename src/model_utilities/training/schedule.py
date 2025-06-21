@@ -66,7 +66,7 @@ class ManualLR(TorchScheduler):
 
     @classmethod
     def parse(cls, sched):
-        scheds = sched.split(",")
+        scheds = sched.split(";")
         milestones = []
         schedulers = []
         for s in scheds:
@@ -93,6 +93,11 @@ class ManualLR(TorchScheduler):
 def _parse_schedule(sched):
     if "<@" in sched:
         return ManualLR.parse(sched)
+
+    if "*" in sched:
+        print(sched)
+        sched = sched[sched.index("*") + 1:]
+        print(sched)
 
     if '@' in sched:
         factor, schtype = sched.split('@')
@@ -125,6 +130,18 @@ def _parse_schedule(sched):
             s1 = functools.partial(torch.optim.lr_scheduler.MultiplicativeLR, lr_lambda=lambda epoch: 1.0)
             s2 = functools.partial(torch.optim.lr_scheduler.LambdaLR, lr_lambda=lambda i: (1 + gamma * i) ** (- power))
             return ManualLR([s1, s2], [1], step_on_batch=True)
+    if schtype.startswith('linearWarmup'):
+        start_factor, total_iters = (float(i) for i in schtype[12:].split(","))
+        total_iters = int(total_iters)
+
+        return torchbearer.callbacks.TorchScheduler(
+            functools.partial(torch.optim.lr_scheduler.LinearLR, start_factor=start_factor, total_iters=total_iters),
+            step_on_batch=step_on_batch)
+    if schtype.startswith('cosineAnnealing'):
+        min_lr, t_max = (float(i) for i in schtype[15:].split(","))
+        t_max = int(t_max)
+
+        return torchbearer.callbacks.CosineAnnealingLR(t_max, min_lr)
     elif schtype.startswith('['):
         milestones = json.loads(schtype)
         return torchbearer.callbacks.MultiStepLR(milestones, gamma=factor, step_on_batch=step_on_batch)
@@ -140,14 +157,18 @@ def parse_learning_rate_arg(learning_rate: str):
     scheduler callback.
 
     Examples:
-        0.1                        --  fixed lr
-        0.1*0.2@every10            --  decrease by factor=0.2 every 10 epochs
-        0.1*0.2@every10B           --  decrease by factor=0.2 every 10 batches
-        0.1*0.2@[10,30,80]         --  decrease by factor=0.2 at epochs 10, 30, and 80
-        0.1*0.2@[10,30,80]B        --  decrease by factor=0.2 at batches 10, 30, and 80
-        0.1*0.2@plateau            --  decrease by factor=0.2 on validation plateau
-        0.1*inv0.0001,0.75B        --  decrease by using the old caffe inv rule each batch
-        0.01<@10,0.1<@20,0.01      --  manual lr
+        0.1                         --  fixed lr
+        0.1*0.2@every10             --  decrease by factor=0.2 every 10 epochs
+        0.1*0.2@every10B            --  decrease by factor=0.2 every 10 batches
+        0.1*0.2@[10,30,80]          --  decrease by factor=0.2 at epochs 10, 30, and 80
+        0.1*0.2@[10,30,80]B         --  decrease by factor=0.2 at batches 10, 30, and 80
+        0.1*0.2@plateau             --  decrease by factor=0.2 on validation plateau
+        0.1*inv0.0001,0.75B         --  decrease by using the old caffe inv rule each batch
+        0.01<@10;0.1<@20;0.01       --  manual lr
+        0.01<@10;0.1@every1<@20;0.1 -- 0.01 static for 10 epochs, decay by *0.1 every 1 epoch for 10 epochs,
+                                        then 0.1 static
+        0.1*linearWarmup0.5,10      --  linear warmup from 0.05 to 0.1 for the first 10 epochs of training
+        0.1*cosineAnnealing0.001,10 --  cosine annealing with min lr 0.001 and 10 epochs
 
 
     Args:
@@ -159,7 +180,10 @@ def parse_learning_rate_arg(learning_rate: str):
 
     if "<@" in learning_rate:
         sch = _parse_schedule(learning_rate)
-        return float(learning_rate.split("<@")[0]), sch
+        initial = learning_rate.split("<@")[0]
+        if "*" in initial:
+            initial = initial.split("*")[0]
+        return float(initial), sch
 
     sp = str(learning_rate).split('*')
     initial = float(sp[0])
