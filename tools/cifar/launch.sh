@@ -4,7 +4,7 @@
 #SBATCH --gres=gpu:1
 #SBATCH --nodes=1
 #SBATCH -c 12
-#SBATCH --time=03:00:00
+#SBATCH --time=05:00:00
 
 module load conda/python3
 source activate torchwatcher

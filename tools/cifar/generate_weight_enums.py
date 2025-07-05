@@ -2,6 +2,7 @@ from torchvision.datasets import CIFAR10, CIFAR100
 
 from model_utilities.models.cifar_resnet import *
 from model_utilities.models.cifar_vgg import *
+from torchvision.models.convnext import *
 from torchvision.models.resnet import *
 from torchvision.models.vgg import *
 import os
@@ -38,10 +39,10 @@ if __name__ == '__main__':
 
     for dataset in ['cifar10', 'cifar100']:
         if dataset == 'cifar10':
-            categories = str(CIFAR10(root="/scratch/jsh2/datasets").classes)
+            categories = str(CIFAR10(root="/iridisfs/vlcgroup/vision_datasets").classes)
             name = "_COMMON_META_CIFAR10"
         else:
-            categories = str(CIFAR100(root="/scratch/jsh2/datasets").classes)
+            categories = str(CIFAR100(root="/iridisfs/vlcgroup/vision_datasets").classes)
             name = "_COMMON_META_CIFAR100"
 
         print(name + """ = {

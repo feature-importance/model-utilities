@@ -6,7 +6,7 @@ do
   do
     for MODEL in convnext_base convnext_tiny convnext_small convnext_large
     do
-      sbatch launch.sh --dataset "$DATASET" --model "$MODEL" --seed "$SEED" --lr "1e-3*linearWarmup0.01,5<@5;cosineAnnealing0,595" --batch-size 1024 --epochs 600 --optim=adamw
+      sbatch launch.sh --dataset "$DATASET" --model "$MODEL" --seed "$SEED" --lr "1e-3*linearWarmup0.01,5<@5;cosineAnnealing0,595" --batch-size 1024 --epochs 600 --opt=adamw
     done
   done
 done
