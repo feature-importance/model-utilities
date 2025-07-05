@@ -1,5 +1,5 @@
 """
-CIFAR ConvNext models pretrained weights.
+CIFAR ConvNeXt models pretrained weights.
 """
 
 from torchvision.models import (Weights, convnext_base, convnext_tiny,
@@ -13,116 +13,377 @@ __all__ = [
 ]
 
 
-class ConvNext_Base_Weights(WeightsEnum):
+class ConvNeXt_base_Weights(WeightsEnum):
     CIFAR100_s0 = Weights(
-        url="https://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
-            "/vgg16-cifar100/model_0.pt",
+        url="https://marc.ecs.soton.ac.uk/pytorch-models/model-utilities/convnext_base-cifar100/model_0.pt",
         transforms=ImageClassificationEval,
         meta={
             **_COMMON_META_CIFAR100,
-            "num_params": 134670244,
-            "recipe": "https://github.com/feature-importance/model-utilities"
-                      "/tree/main/tools/cifar#resnet",
+            "num_params": 87668964,
+            "recipe": "https://github.com/feature-importance/model-utilities/tree/main/tools/cifar#resnet",
             "_metrics": {
                 "CIFAR100": {
-                    "acc@1": 0.654,
+                    "acc@1": 0.491,
                 }
             },
-            "_docs": """These weights reproduce closely the results of the 
-            paper using a simple training recipe.""",
+            "_docs": """These weights reproduce closely the results of the paper using a simple training recipe.""",
         }
     )
     CIFAR100_s1 = Weights(
-        url="https://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
-            "/vgg16-cifar100/model_1.pt",
+        url="https://marc.ecs.soton.ac.uk/pytorch-models/model-utilities/convnext_base-cifar100/model_1.pt",
         transforms=ImageClassificationEval,
         meta={
             **_COMMON_META_CIFAR100,
-            "num_params": 134670244,
-            "recipe": "https://github.com/feature-importance/model-utilities"
-                      "/tree/main/tools/cifar#resnet",
+            "num_params": 87668964,
+            "recipe": "https://github.com/feature-importance/model-utilities/tree/main/tools/cifar#resnet",
             "_metrics": {
                 "CIFAR100": {
-                    "acc@1": 0.656,
+                    "acc@1": 0.488,
                 }
             },
-            "_docs": """These weights reproduce closely the results of the 
-            paper using a simple training recipe.""",
+            "_docs": """These weights reproduce closely the results of the paper using a simple training recipe.""",
         }
     )
     CIFAR100_s2 = Weights(
-        url="https://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
-            "/vgg16-cifar100/model_2.pt",
+        url="https://marc.ecs.soton.ac.uk/pytorch-models/model-utilities/convnext_base-cifar100/model_2.pt",
         transforms=ImageClassificationEval,
         meta={
             **_COMMON_META_CIFAR100,
-            "num_params": 134670244,
-            "recipe": "https://github.com/feature-importance/model-utilities"
-                      "/tree/main/tools/cifar#resnet",
+            "num_params": 87668964,
+            "recipe": "https://github.com/feature-importance/model-utilities/tree/main/tools/cifar#resnet",
             "_metrics": {
                 "CIFAR100": {
-                    "acc@1": 0.662,
+                    "acc@1": 0.493,
                 }
             },
-            "_docs": """These weights reproduce closely the results of the 
-            paper using a simple training recipe.""",
+            "_docs": """These weights reproduce closely the results of the paper using a simple training recipe.""",
         }
     )
     CIFAR10_s0 = Weights(
-        url="https://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
-            "/vgg16-cifar10/model_0.pt",
+        url="https://marc.ecs.soton.ac.uk/pytorch-models/model-utilities/convnext_base-cifar10/model_0.pt",
         transforms=ImageClassificationEval,
         meta={
             **_COMMON_META_CIFAR10,
-            "num_params": 134301514,
-            "recipe": "https://github.com/feature-importance/model-utilities"
-                      "/tree/main/tools/cifar#resnet",
+            "num_params": 87576714,
+            "recipe": "https://github.com/feature-importance/model-utilities/tree/main/tools/cifar#resnet",
             "_metrics": {
                 "CIFAR10": {
-                    "acc@1": 0.917,
+                    "acc@1": 0.781,
                 }
             },
-            "_docs": """These weights reproduce closely the results of the 
-            paper using a simple training recipe.""",
+            "_docs": """These weights reproduce closely the results of the paper using a simple training recipe.""",
         }
     )
     CIFAR10_s1 = Weights(
-        url="https://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
-            "/vgg16-cifar10/model_1.pt",
+        url="https://marc.ecs.soton.ac.uk/pytorch-models/model-utilities/convnext_base-cifar10/model_1.pt",
         transforms=ImageClassificationEval,
         meta={
             **_COMMON_META_CIFAR10,
-            "num_params": 134301514,
-            "recipe": "https://github.com/feature-importance/model-utilities"
-                      "/tree/main/tools/cifar#resnet",
+            "num_params": 87576714,
+            "recipe": "https://github.com/feature-importance/model-utilities/tree/main/tools/cifar#resnet",
             "_metrics": {
                 "CIFAR10": {
-                    "acc@1": 0.916,
+                    "acc@1": 0.785,
                 }
             },
-            "_docs": """These weights reproduce closely the results of the 
-            paper using a simple training recipe.""",
+            "_docs": """These weights reproduce closely the results of the paper using a simple training recipe.""",
         }
     )
     CIFAR10_s2 = Weights(
-        url="https://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
-            "/vgg16-cifar10/model_2.pt",
+        url="https://marc.ecs.soton.ac.uk/pytorch-models/model-utilities/convnext_base-cifar10/model_2.pt",
         transforms=ImageClassificationEval,
         meta={
             **_COMMON_META_CIFAR10,
-            "num_params": 134301514,
-            "recipe": "https://github.com/feature-importance/model-utilities"
-                      "/tree/main/tools/cifar#resnet",
+            "num_params": 87576714,
+            "recipe": "https://github.com/feature-importance/model-utilities/tree/main/tools/cifar#resnet",
             "_metrics": {
                 "CIFAR10": {
-                    "acc@1": 0.917,
+                    "acc@1": 0.810,
                 }
             },
-            "_docs": """These weights reproduce closely the results of the 
-            paper using a simple training recipe.""",
+            "_docs": """These weights reproduce closely the results of the paper using a simple training recipe.""",
         }
     )
     DEFAULT = CIFAR10_s0
 
 
+class ConvNeXt_large_Weights(WeightsEnum):
+    CIFAR10_s0 = Weights(
+        url="https://marc.ecs.soton.ac.uk/pytorch-models/model-utilities/convnext_large-cifar10/model_0.pt",
+        transforms=ImageClassificationEval,
+        meta={
+            **_COMMON_META_CIFAR10,
+            "num_params": 196245706,
+            "recipe": "https://github.com/feature-importance/model-utilities/tree/main/tools/cifar#resnet",
+            "_metrics": {
+                "CIFAR10": {
+                    "acc@1": 0.792,
+                }
+            },
+            "_docs": """These weights reproduce closely the results of the paper using a simple training recipe.""",
+        }
+    )
+    CIFAR10_s1 = Weights(
+        url="https://marc.ecs.soton.ac.uk/pytorch-models/model-utilities/convnext_large-cifar10/model_1.pt",
+        transforms=ImageClassificationEval,
+        meta={
+            **_COMMON_META_CIFAR10,
+            "num_params": 196245706,
+            "recipe": "https://github.com/feature-importance/model-utilities/tree/main/tools/cifar#resnet",
+            "_metrics": {
+                "CIFAR10": {
+                    "acc@1": 0.782,
+                }
+            },
+            "_docs": """These weights reproduce closely the results of the paper using a simple training recipe.""",
+        }
+    )
+    CIFAR10_s2 = Weights(
+        url="https://marc.ecs.soton.ac.uk/pytorch-models/model-utilities/convnext_large-cifar10/model_2.pt",
+        transforms=ImageClassificationEval,
+        meta={
+            **_COMMON_META_CIFAR10,
+            "num_params": 196245706,
+            "recipe": "https://github.com/feature-importance/model-utilities/tree/main/tools/cifar#resnet",
+            "_metrics": {
+                "CIFAR10": {
+                    "acc@1": 0.785,
+                }
+            },
+            "_docs": """These weights reproduce closely the results of the paper using a simple training recipe.""",
+        }
+    )
+    CIFAR100_s0 = Weights(
+        url="https://marc.ecs.soton.ac.uk/pytorch-models/model-utilities/convnext_large-cifar100/model_0.pt",
+        transforms=ImageClassificationEval,
+        meta={
+            **_COMMON_META_CIFAR100,
+            "num_params": 196384036,
+            "recipe": "https://github.com/feature-importance/model-utilities/tree/main/tools/cifar#resnet",
+            "_metrics": {
+                "CIFAR100": {
+                    "acc@1": 0.500,
+                }
+            },
+            "_docs": """These weights reproduce closely the results of the paper using a simple training recipe.""",
+        }
+    )
+    CIFAR100_s1 = Weights(
+        url="https://marc.ecs.soton.ac.uk/pytorch-models/model-utilities/convnext_large-cifar100/model_1.pt",
+        transforms=ImageClassificationEval,
+        meta={
+            **_COMMON_META_CIFAR100,
+            "num_params": 196384036,
+            "recipe": "https://github.com/feature-importance/model-utilities/tree/main/tools/cifar#resnet",
+            "_metrics": {
+                "CIFAR100": {
+                    "acc@1": 0.495,
+                }
+            },
+            "_docs": """These weights reproduce closely the results of the paper using a simple training recipe.""",
+        }
+    )
+    CIFAR100_s2 = Weights(
+        url="https://marc.ecs.soton.ac.uk/pytorch-models/model-utilities/convnext_large-cifar100/model_2.pt",
+        transforms=ImageClassificationEval,
+        meta={
+            **_COMMON_META_CIFAR100,
+            "num_params": 196384036,
+            "recipe": "https://github.com/feature-importance/model-utilities/tree/main/tools/cifar#resnet",
+            "_metrics": {
+                "CIFAR100": {
+                    "acc@1": 0.498,
+                }
+            },
+            "_docs": """These weights reproduce closely the results of the paper using a simple training recipe.""",
+        }
+    )
+    DEFAULT = CIFAR10_s0
 
+
+class ConvNeXt_tiny_Weights(WeightsEnum):
+    CIFAR10_s0 = Weights(
+        url="https://marc.ecs.soton.ac.uk/pytorch-models/model-utilities/convnext_tiny-cifar10/model_0.pt",
+        transforms=ImageClassificationEval,
+        meta={
+            **_COMMON_META_CIFAR10,
+            "num_params": 27827818,
+            "recipe": "https://github.com/feature-importance/model-utilities/tree/main/tools/cifar#resnet",
+            "_metrics": {
+                "CIFAR10": {
+                    "acc@1": 0.794,
+                }
+            },
+            "_docs": """These weights reproduce closely the results of the paper using a simple training recipe.""",
+        }
+    )
+    CIFAR10_s1 = Weights(
+        url="https://marc.ecs.soton.ac.uk/pytorch-models/model-utilities/convnext_tiny-cifar10/model_1.pt",
+        transforms=ImageClassificationEval,
+        meta={
+            **_COMMON_META_CIFAR10,
+            "num_params": 27827818,
+            "recipe": "https://github.com/feature-importance/model-utilities/tree/main/tools/cifar#resnet",
+            "_metrics": {
+                "CIFAR10": {
+                    "acc@1": 0.785,
+                }
+            },
+            "_docs": """These weights reproduce closely the results of the paper using a simple training recipe.""",
+        }
+    )
+    CIFAR10_s2 = Weights(
+        url="https://marc.ecs.soton.ac.uk/pytorch-models/model-utilities/convnext_tiny-cifar10/model_2.pt",
+        transforms=ImageClassificationEval,
+        meta={
+            **_COMMON_META_CIFAR10,
+            "num_params": 27827818,
+            "recipe": "https://github.com/feature-importance/model-utilities/tree/main/tools/cifar#resnet",
+            "_metrics": {
+                "CIFAR10": {
+                    "acc@1": 0.797,
+                }
+            },
+            "_docs": """These weights reproduce closely the results of the paper using a simple training recipe.""",
+        }
+    )
+    CIFAR100_s0 = Weights(
+        url="https://marc.ecs.soton.ac.uk/pytorch-models/model-utilities/convnext_tiny-cifar100/model_0.pt",
+        transforms=ImageClassificationEval,
+        meta={
+            **_COMMON_META_CIFAR100,
+            "num_params": 27897028,
+            "recipe": "https://github.com/feature-importance/model-utilities/tree/main/tools/cifar#resnet",
+            "_metrics": {
+                "CIFAR100": {
+                    "acc@1": 0.466,
+                }
+            },
+            "_docs": """These weights reproduce closely the results of the paper using a simple training recipe.""",
+        }
+    )
+    CIFAR100_s1 = Weights(
+        url="https://marc.ecs.soton.ac.uk/pytorch-models/model-utilities/convnext_tiny-cifar100/model_1.pt",
+        transforms=ImageClassificationEval,
+        meta={
+            **_COMMON_META_CIFAR100,
+            "num_params": 27897028,
+            "recipe": "https://github.com/feature-importance/model-utilities/tree/main/tools/cifar#resnet",
+            "_metrics": {
+                "CIFAR100": {
+                    "acc@1": 0.469,
+                }
+            },
+            "_docs": """These weights reproduce closely the results of the paper using a simple training recipe.""",
+        }
+    )
+    CIFAR100_s2 = Weights(
+        url="https://marc.ecs.soton.ac.uk/pytorch-models/model-utilities/convnext_tiny-cifar100/model_2.pt",
+        transforms=ImageClassificationEval,
+        meta={
+            **_COMMON_META_CIFAR100,
+            "num_params": 27897028,
+            "recipe": "https://github.com/feature-importance/model-utilities/tree/main/tools/cifar#resnet",
+            "_metrics": {
+                "CIFAR100": {
+                    "acc@1": 0.463,
+                }
+            },
+            "_docs": """These weights reproduce closely the results of the paper using a simple training recipe.""",
+        }
+    )
+    DEFAULT = CIFAR10_s0
+
+
+class ConvNeXt_small_Weights(WeightsEnum):
+    CIFAR10_s0 = Weights(
+        url="https://marc.ecs.soton.ac.uk/pytorch-models/model-utilities/convnext_small-cifar10/model_0.pt",
+        transforms=ImageClassificationEval,
+        meta={
+            **_COMMON_META_CIFAR10,
+            "num_params": 49462378,
+            "recipe": "https://github.com/feature-importance/model-utilities/tree/main/tools/cifar#resnet",
+            "_metrics": {
+                "CIFAR10": {
+                    "acc@1": 0.784,
+                }
+            },
+            "_docs": """These weights reproduce closely the results of the paper using a simple training recipe.""",
+        }
+    )
+    CIFAR10_s1 = Weights(
+        url="https://marc.ecs.soton.ac.uk/pytorch-models/model-utilities/convnext_small-cifar10/model_1.pt",
+        transforms=ImageClassificationEval,
+        meta={
+            **_COMMON_META_CIFAR10,
+            "num_params": 49462378,
+            "recipe": "https://github.com/feature-importance/model-utilities/tree/main/tools/cifar#resnet",
+            "_metrics": {
+                "CIFAR10": {
+                    "acc@1": 0.782,
+                }
+            },
+            "_docs": """These weights reproduce closely the results of the paper using a simple training recipe.""",
+        }
+    )
+    CIFAR10_s2 = Weights(
+        url="https://marc.ecs.soton.ac.uk/pytorch-models/model-utilities/convnext_small-cifar10/model_2.pt",
+        transforms=ImageClassificationEval,
+        meta={
+            **_COMMON_META_CIFAR10,
+            "num_params": 49462378,
+            "recipe": "https://github.com/feature-importance/model-utilities/tree/main/tools/cifar#resnet",
+            "_metrics": {
+                "CIFAR10": {
+                    "acc@1": 0.792,
+                }
+            },
+            "_docs": """These weights reproduce closely the results of the paper using a simple training recipe.""",
+        }
+    )
+    CIFAR100_s0 = Weights(
+        url="https://marc.ecs.soton.ac.uk/pytorch-models/model-utilities/convnext_small-cifar100/model_0.pt",
+        transforms=ImageClassificationEval,
+        meta={
+            **_COMMON_META_CIFAR100,
+            "num_params": 49531588,
+            "recipe": "https://github.com/feature-importance/model-utilities/tree/main/tools/cifar#resnet",
+            "_metrics": {
+                "CIFAR100": {
+                    "acc@1": 0.472,
+                }
+            },
+            "_docs": """These weights reproduce closely the results of the paper using a simple training recipe.""",
+        }
+    )
+    CIFAR100_s1 = Weights(
+        url="https://marc.ecs.soton.ac.uk/pytorch-models/model-utilities/convnext_small-cifar100/model_1.pt",
+        transforms=ImageClassificationEval,
+        meta={
+            **_COMMON_META_CIFAR100,
+            "num_params": 49531588,
+            "recipe": "https://github.com/feature-importance/model-utilities/tree/main/tools/cifar#resnet",
+            "_metrics": {
+                "CIFAR100": {
+                    "acc@1": 0.462,
+                }
+            },
+            "_docs": """These weights reproduce closely the results of the paper using a simple training recipe.""",
+        }
+    )
+    CIFAR100_s2 = Weights(
+        url="https://marc.ecs.soton.ac.uk/pytorch-models/model-utilities/convnext_small-cifar100/model_2.pt",
+        transforms=ImageClassificationEval,
+        meta={
+            **_COMMON_META_CIFAR100,
+            "num_params": 49531588,
+            "recipe": "https://github.com/feature-importance/model-utilities/tree/main/tools/cifar#resnet",
+            "_metrics": {
+                "CIFAR100": {
+                    "acc@1": 0.467,
+                }
+            },
+            "_docs": """These weights reproduce closely the results of the paper using a simple training recipe.""",
+        }
+    )
+    DEFAULT = CIFAR10_s0
