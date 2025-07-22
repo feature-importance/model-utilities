@@ -1,10 +1,13 @@
 from typing import Tuple
 
 import torch
+from babel.messages.pofile import denormalize
+from model_utilities.transforms.unnormalize import Denormalize
 from torch import nn, Tensor
 import torchvision.transforms.functional as F
 from torchvision.transforms import RandomCrop, RandomHorizontalFlip
 
+from .unnormalize import Denormalize as _Denormalize
 
 __all__ = ["ImageClassificationTraining", "ImageClassificationEval"]
 
@@ -80,3 +83,8 @@ class ImageClassificationTraining(_ImageClassificationBase):
 class ImageClassificationEval(_ImageClassificationBase):
     def __init__(self):
         super().__init__(training=False)
+
+
+class Denormalize(_Denormalize):
+    def __init__(self):
+        super().__init__(mean=(0.4914, 0.4822, 0.4465), std=(0.2023, 0.1994, 0.2010))

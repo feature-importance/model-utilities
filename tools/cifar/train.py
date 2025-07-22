@@ -14,7 +14,7 @@ from model_utilities.training.modelfitting import fit_model, set_seed, \
     get_device
 from model_utilities.training.schedule import parse_learning_rate_arg
 from model_utilities.training.utils import save_args
-from model_utilities.transforms._cifar_presets import \
+from model_utilities.transforms.cifar_presets import \
     ImageClassificationTraining, ImageClassificationEval
 from torchbearer.callbacks import CSVLogger
 from torchvision.datasets import CIFAR10, CIFAR100

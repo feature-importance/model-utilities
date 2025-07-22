@@ -13,7 +13,7 @@ from torchbearer import Trial
 from torchbearer.callbacks import TensorBoard, TensorBoardText, MultiStepLR, \
     TorchScheduler, CSVLogger
 
-FORCE_MPS = False
+FORCE_MPS = True
 
 
 def set_seed(seed):
