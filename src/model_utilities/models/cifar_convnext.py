@@ -9,11 +9,12 @@ from ..models import _COMMON_META_CIFAR10, _COMMON_META_CIFAR100, WeightsEnum
 from ..transforms._cifar_presets import ImageClassificationEval
 
 __all__ = [
-    "convnext_tiny", "convnext_small", "convnext_large", "convnext_base"
+    "convnext_tiny", "convnext_small", "convnext_large", "convnext_base",
+    "ConvNeXt_Tiny_Weights", "ConvNeXt_Small_Weights", "ConvNeXt_Base_Weights", "ConvNeXt_Large_Weights",
 ]
 
 
-class ConvNeXt_base_Weights(WeightsEnum):
+class ConvNeXt_Base_Weights(WeightsEnum):
     CIFAR100_s0 = Weights(
         url="https://marc.ecs.soton.ac.uk/pytorch-models/model-utilities/convnext_base-cifar100/model_0.pt",
         transforms=ImageClassificationEval,
@@ -107,7 +108,7 @@ class ConvNeXt_base_Weights(WeightsEnum):
     DEFAULT = CIFAR10_s0
 
 
-class ConvNeXt_large_Weights(WeightsEnum):
+class ConvNeXt_Large_Weights(WeightsEnum):
     CIFAR10_s0 = Weights(
         url="https://marc.ecs.soton.ac.uk/pytorch-models/model-utilities/convnext_large-cifar10/model_0.pt",
         transforms=ImageClassificationEval,
@@ -201,7 +202,7 @@ class ConvNeXt_large_Weights(WeightsEnum):
     DEFAULT = CIFAR10_s0
 
 
-class ConvNeXt_tiny_Weights(WeightsEnum):
+class ConvNeXt_Tiny_Weights(WeightsEnum):
     CIFAR10_s0 = Weights(
         url="https://marc.ecs.soton.ac.uk/pytorch-models/model-utilities/convnext_tiny-cifar10/model_0.pt",
         transforms=ImageClassificationEval,
@@ -295,7 +296,7 @@ class ConvNeXt_tiny_Weights(WeightsEnum):
     DEFAULT = CIFAR10_s0
 
 
-class ConvNeXt_small_Weights(WeightsEnum):
+class ConvNeXt_Small_Weights(WeightsEnum):
     CIFAR10_s0 = Weights(
         url="https://marc.ecs.soton.ac.uk/pytorch-models/model-utilities/convnext_small-cifar10/model_0.pt",
         transforms=ImageClassificationEval,
