@@ -9,7 +9,7 @@ from torchvision.models import (resnet18, resnet34, resnet50, resnet101,
                                 resnet152, Weights)
 from torchvision.models._utils import _ovewrite_named_param
 
-from ..transforms._cifar_presets import ImageClassificationEval
+from ..transforms.cifar_presets import ImageClassificationEval
 from ..models import _COMMON_META_CIFAR10, _COMMON_META_CIFAR100, WeightsEnum
 
 

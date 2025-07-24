@@ -6,7 +6,7 @@ from torchvision.models import (Weights, convnext_base, convnext_tiny,
                                 convnext_large, convnext_small)
 
 from ..models import _COMMON_META_CIFAR10, _COMMON_META_CIFAR100, WeightsEnum
-from ..transforms._cifar_presets import ImageClassificationEval
+from ..transforms.cifar_presets import ImageClassificationEval
 
 __all__ = [
     "convnext_tiny", "convnext_small", "convnext_large", "convnext_base",

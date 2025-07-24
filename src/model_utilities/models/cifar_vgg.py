@@ -5,7 +5,7 @@ CIFAR VGG models pretrained weights.
 from torchvision.models import vgg16, vgg19, Weights
 
 from ..models import _COMMON_META_CIFAR10, _COMMON_META_CIFAR100, WeightsEnum
-from ..transforms._cifar_presets import ImageClassificationEval
+from ..transforms.cifar_presets import ImageClassificationEval
 
 __all__ = [
     "vgg16", "vgg19", "VGG16_Weights", "VGG19_Weights"
