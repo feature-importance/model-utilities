@@ -17,24 +17,32 @@ class ImageNetHDF5(VisionDataset):
 
         targets = sorted(list(filter(lambda f: '.hdf5' in f, os.listdir(root))))
         self.targets = {f[:-5]: i for i, f in enumerate(targets)}
-        self.fill_cache()
+        # self.fill_cache()
 
     def load(self, file, i):
         with h5py.File(os.path.join(self.root, file + '.hdf5'), 'r') as f:
             return f['data'][i]
 
+    def load_all(self, file):
+        with h5py.File(os.path.join(self.root, file + '.hdf5'), 'r') as f:
+            return list(f['data'])
+
     def fill_cache(self):
         print('Filling cache')
         files = (f[:-5] for f in list(filter(lambda f: '.hdf5' in f, os.listdir(self.root)))[:self.cache_size])
         for file in files:
-            with h5py.File(os.path.join(self.root, file + '.hdf5'), 'r') as f:
-                self.cache[file] = list(f['data'])
+            self.cache[file] = self.load_all(file)
         print('Done')
 
     def load_from_cache(self, file, i):
         if file in self.cache:
             return self.cache[file][i]
-        return self.load(file, i)
+
+        if len(self.cache) >= self.cache_size:
+            return self.load(file, i)
+        else:
+            self.cache[file] = self.load_all(file)
+            return self.cache[file][i]
 
     def __getitem__(self, index):
         dest, i = self.dest[index]
