@@ -8,8 +8,14 @@ from torchvision.datasets import VisionDataset
 
 
 class ImageNetHDF5(VisionDataset):
-    def __init__(self, root, cache_size=500, transform=None):
+    def __init__(self, root, cache_size=None, transform=None):
         super(ImageNetHDF5, self).__init__(root, transform=transform, target_transform=None)
+
+        if cache_size is None:
+            if "IMAGENET_CACHE_SIZE" in os.environ:
+                cache_size = int(os.environ["IMAGENET_CACHE_SIZE"])
+            else:
+                cache_size = 0
 
         self.dest = pickle.load(open(os.path.join(root, 'dest.p'), 'rb'))
         self.cache = {}
