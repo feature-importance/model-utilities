@@ -143,7 +143,7 @@ def fit_model(model, criterion, opt, trainloader, valloader, epochs=1000,
     if model_file is not None:
         cb.append(torchbearer.callbacks.MostRecent(
             model_file.replace(".pt", "_last.pt")))
-        if period is not None:
+        if period is not None and period <= 0:
             cb.append(torchbearer.callbacks.Interval(model_file_checkpoint,
                                                      period=period,
                                                      on_batch=False))
