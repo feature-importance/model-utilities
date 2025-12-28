@@ -24,7 +24,16 @@ class ImageNetHDF5(VisionDataset):
         targets = sorted(list(filter(lambda f: '.hdf5' in f, os.listdir(root))))
         if classes:
             targets = sorted(list(filter(lambda f: f[:-5] in classes, targets)))
+
         self.targets = {f[:-5]: i for i, f in enumerate(targets)}
+
+        if classes:
+            newdest = []
+            for idx in range(len(self)):
+                dest, i = self.dest[idx]
+                if dest in self.targets:
+                    newdest.append((dest, i))
+            self.dest = newdest
 
         if not lazy:
             self.fill_cache()
