@@ -8,7 +8,7 @@ from torchvision.datasets import VisionDataset
 
 
 class ImageNetHDF5(VisionDataset):
-    def __init__(self, root, cache_size=None, transform=None):
+    def __init__(self, root, cache_size=None, transform=None, classes=None, lazy=True):
         super(ImageNetHDF5, self).__init__(root, transform=transform, target_transform=None)
 
         if cache_size is None:
@@ -22,8 +22,12 @@ class ImageNetHDF5(VisionDataset):
         self.cache_size = cache_size
 
         targets = sorted(list(filter(lambda f: '.hdf5' in f, os.listdir(root))))
+        if classes:
+            targets = sorted(list(filter(lambda f: f[:-5] in classes, targets)))
         self.targets = {f[:-5]: i for i, f in enumerate(targets)}
-        # self.fill_cache()
+
+        if not lazy:
+            self.fill_cache()
 
     def load(self, file, i):
         with h5py.File(os.path.join(self.root, file + '.hdf5'), 'r') as f:
