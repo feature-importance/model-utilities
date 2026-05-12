@@ -8,15 +8,13 @@ import sys
 import torch
 import torch.nn as nn
 import torchvision
-from model_utilities.models.cifar_resnet import resnet18_3x3, resnet34_3x3, \
-    resnet50_3x3, resnet101_3x3, resnet152_3x3
+import model_utilities.models.cifar_resnet as cifar_resnet
 from model_utilities.training.modelfitting import fit_model, set_seed, \
     get_device
 from model_utilities.training.schedule import parse_learning_rate_arg
 from model_utilities.training.utils import save_args
 from model_utilities.transforms.cifar_presets import \
     ImageClassificationTraining, ImageClassificationEval
-from torchbearer.callbacks import CSVLogger
 from torchvision.datasets import CIFAR10, CIFAR100
 
 
@@ -65,16 +63,8 @@ def get_args_parser(add_help=True):
 
 
 def get_model(model_name, num_classes):
-    if model_name == 'resnet18_3x3':
-        return resnet18_3x3(num_classes=num_classes)
-    if model_name == 'resnet34_3x3':
-        return resnet34_3x3(num_classes=num_classes)
-    if model_name == 'resnet50_3x3':
-        return resnet50_3x3(num_classes=num_classes)
-    if model_name == 'resnet101_3x3':
-        return resnet101_3x3(num_classes=num_classes)
-    if model_name == 'resnet152_3x3':
-        return resnet152_3x3(num_classes=num_classes)
+    if hasattr(cifar_resnet, model_name):
+        return getattr(cifar_resnet, model_name)(num_classes=num_classes)
 
     return torchvision.models.get_model(model_name, num_classes=num_classes)
 
