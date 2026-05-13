@@ -18,7 +18,7 @@ do
 #    done
     for MODEL in resnet101_3x3_np resnet152_3x3_np
     do
-      sbatch launch.sh --dataset "$DATASET" --model "$MODEL" --seed "$SEED" --lr "0.01<@1,0.1<@100,0.01<@150,0.001" --batch-size 128 --epochs 200
+      sbatch launch.sh --dataset "$DATASET" --model "$MODEL" --seed "$SEED" --lr "0.01<@1;0.1<@100;0.01<@150;0.001" --batch-size 128 --epochs 200
     done
   done
 done

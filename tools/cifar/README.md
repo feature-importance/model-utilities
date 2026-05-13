@@ -85,7 +85,7 @@ We've trained 3 seeds of each model on both CIFAR-10 and CIFAR-100:
 <a name="vgg"></a>
 
 All standard VGG16 and 19 models were trained in a similar way to the 
-resnets but with a lower inital lr (these models don't include BN) and are 
+resnets but with a lower initial lr (these models don't include BN) and are 
 expected to be more sensitive:
 
     python train.py --dataset cifar10 --model vgg16 --seed 0 \
