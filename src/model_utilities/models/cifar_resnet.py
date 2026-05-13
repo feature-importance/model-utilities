@@ -1722,3 +1722,114 @@ class ResNet34_3x3_np_Weights(WeightsEnum):
         }
     )
     DEFAULT = CIFAR10_s0
+
+class ResNet18_3x3_np_Weights(WeightsEnum):
+    CIFAR10_s0 = Weights(
+        url="https://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
+            "/resnet18_3x3_np-cifar10/model_0.pt",
+        transforms=ImageClassificationEval,
+        meta={
+            **_COMMON_META_CIFAR10,
+            "num_params": 23520842,
+            "recipe": "https://github.com/feature-importance/model-utilities"
+                      "/tree/main/tools/cifar#resnet",
+            "_metrics": {
+                "CIFAR10": {
+                    "acc@1": 0.926,
+                }
+            },
+            "_docs": """These weights reproduce closely the results of the 
+            paper using a simple training recipe.""",
+        }
+    )
+    CIFAR10_s1 = Weights(
+        url="https://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
+            "/resnet18_3x3_np-cifar10/model_1.pt",
+        transforms=ImageClassificationEval,
+        meta={
+            **_COMMON_META_CIFAR10,
+            "num_params": 23520842,
+            "recipe": "https://github.com/feature-importance/model-utilities"
+                      "/tree/main/tools/cifar#resnet",
+            "_metrics": {
+                "CIFAR10": {
+                    "acc@1": 0.933,
+                }
+            },
+            "_docs": """These weights reproduce closely the results of the 
+            paper using a simple training recipe.""",
+        }
+    )
+    CIFAR10_s2 = Weights(
+        url="https://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
+            "/resnet18_3x3_np-cifar10/model_2.pt",
+        transforms=ImageClassificationEval,
+        meta={
+            **_COMMON_META_CIFAR10,
+            "num_params": 23520842,
+            "recipe": "https://github.com/feature-importance/model-utilities"
+                      "/tree/main/tools/cifar#resnet",
+            "_metrics": {
+                "CIFAR10": {
+                    "acc@1": 0.923,
+                }
+            },
+            "_docs": """These weights reproduce closely the results of the 
+            paper using a simple training recipe.""",
+        }
+    )
+    CIFAR100_s0 = Weights(
+        url="https://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
+            "/resnet18_3x3_np-cifar100/model_0.pt",
+        transforms=ImageClassificationEval,
+        meta={
+            **_COMMON_META_CIFAR100,
+            "num_params": 23705252,
+            "recipe": "https://github.com/feature-importance/model-utilities"
+                      "/tree/main/tools/cifar#resnet",
+            "_metrics": {
+                "CIFAR100": {
+                    "acc@1": 0.642,
+                }
+            },
+            "_docs": """These weights reproduce closely the results of the 
+            paper using a simple training recipe.""",
+        }
+    )
+    CIFAR100_s1 = Weights(
+        url="https://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
+            "/resnet18_3x3_np-cifar100/model_1.pt",
+        transforms=ImageClassificationEval,
+        meta={
+            **_COMMON_META_CIFAR100,
+            "num_params": 23705252,
+            "recipe": "https://github.com/feature-importance/model-utilities"
+                      "/tree/main/tools/cifar#resnet",
+            "_metrics": {
+                "CIFAR100": {
+                    "acc@1": 0.671,
+                }
+            },
+            "_docs": """These weights reproduce closely the results of the 
+            paper using a simple training recipe.""",
+        }
+    )
+    CIFAR100_s2 = Weights(
+        url="https://marc.ecs.soton.ac.uk/pytorch-models/model-utilities"
+            "/resnet18_3x3_np-cifar100/model_2.pt",
+        transforms=ImageClassificationEval,
+        meta={
+            **_COMMON_META_CIFAR100,
+            "num_params": 23705252,
+            "recipe": "https://github.com/feature-importance/model-utilities"
+                      "/tree/main/tools/cifar#resnet",
+            "_metrics": {
+                "CIFAR100": {
+                    "acc@1": 0.652,
+                }
+            },
+            "_docs": """These weights reproduce closely the results of the 
+            paper using a simple training recipe.""",
+        }
+    )
+    DEFAULT = CIFAR10_s0
