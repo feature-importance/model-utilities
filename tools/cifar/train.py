@@ -15,7 +15,6 @@ from model_utilities.training.schedule import parse_learning_rate_arg
 from model_utilities.training.utils import save_args
 from model_utilities.transforms.cifar_presets import \
     ImageClassificationTraining, ImageClassificationEval
-from torchvision import transforms
 from torchvision.datasets import CIFAR10, CIFAR100
 
 
@@ -91,31 +90,6 @@ def get_optimizer(opt_name, parameters, init_lr, momentum, weight_decay):
     return optimizer
 
 
-class RAMCachedCIFAR(torch.utils.data.Dataset):
-    def __init__(self, base_dataset_clz, root=".", train=True, transform=None, download=True):
-        # Force initial download/read from the network directory once
-        base_dataset = base_dataset_clz(
-            root=root, train=train, download=download, transform=None
-        )
-        self.transform = transform
-
-        print("Caching entire dataset into RAM node storage...")
-        # Stack all images and labels into two massive system tensors
-        self.images = torch.stack([transforms.ToTensor()(img) for img, _ in base_dataset])
-        self.labels = torch.tensor([label for _, label in base_dataset], dtype=torch.long)
-        print("Caching complete!")
-
-    def __len__(self):
-        return len(self.images)
-
-    def __getitem__(self, idx):
-        x = self.images[idx]
-        if self.transform:
-            # Apply your data augmentations here on the raw tensor
-            x = self.transform(x)
-        return x, self.labels[idx]
-
-
 def main():
     print("Training models with: ")
     print(sys.argv)
@@ -139,14 +113,14 @@ def main():
                         init_lr, args.momentum, args.weight_decay)
 
     if args.dataset == 'cifar10':
-        train_data = RAMCachedCIFAR(CIFAR10, root=args.data_dir, train=True, download=True,
+        train_data = CIFAR10(root=args.data_dir, train=True, download=True,
                              transform=ImageClassificationTraining())
-        val_data = RAMCachedCIFAR(CIFAR10, root=args.data_dir, train=False, download=True,
+        val_data = CIFAR10(root=args.data_dir, train=False, download=True,
                            transform=ImageClassificationEval())
     else:
-        train_data = RAMCachedCIFAR(CIFAR100, root=args.data_dir, train=True, download=True,
+        train_data = CIFAR100(root=args.data_dir, train=True, download=True,
                               transform=ImageClassificationTraining())
-        val_data = RAMCachedCIFAR(CIFAR100, root=args.data_dir, train=False, download=True,
+        val_data = CIFAR100(root=args.data_dir, train=False, download=True,
                             transform=ImageClassificationEval())
 
     train_data_loader = torch.utils.data.DataLoader(train_data,
