@@ -86,10 +86,11 @@ def fit_model(model, criterion, opt, trainloader, valloader, epochs=1000,
 
     device = get_device(device)
 
-    if not model_file.endswith('.pt'):
-        model_file += '.pt'
+    if model_file:
+        if not model_file.endswith('.pt'):
+            model_file += '.pt'
 
-    model_file_checkpoint = model_file.replace(".pt", ".{epoch:03d}.pt")
+        model_file_checkpoint = model_file.replace(".pt", ".{epoch:03d}.pt")
 
     cb = []
     if log_dir is not None:
@@ -108,7 +109,8 @@ def fit_model(model, criterion, opt, trainloader, valloader, epochs=1000,
                       'opt': str(opt), 'trainloader': str(trainloader),
                       'valloader': str(valloader), 'schedule': str(schedule),
                       'run_id': str(run_id),
-                      'log_dir': str(log_dir), 'model_file': str(model_file),
+                      'log_dir': str(log_dir),
+                      'model_file': str(model_file) if model_file is not None else None,
                       'resume': str(resume),
                       'device': str(device)}
             df = pd.DataFrame(params, index=[0]).transpose()

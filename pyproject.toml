@@ -28,6 +28,9 @@ classifiers = [
 ]
 
 [project.optional-dependencies]
+test = [
+    "pytest>=8.0.0",
+]
 
 [project.urls]
 Homepage = "https://github.com/feature-importance/model-utilities"
@@ -37,3 +40,7 @@ Repository = "https://github.com/feature-importance/model-utilities.git"
 
 [tool.setuptools.dynamic]
 version = {attr = "model_utilities.__version__"}
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]

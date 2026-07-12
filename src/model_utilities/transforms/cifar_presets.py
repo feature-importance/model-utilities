@@ -26,6 +26,7 @@ class _ImageClassificationBase(nn.Module):
         self.crop_size = [crop_size]
         self.mean = list(mean)
         self.std = list(std)
+        self.padding = padding
         self.random_crop = RandomCrop(crop_size, padding=padding)
         self.random_horizontal_flip = RandomHorizontalFlip(flip_prob)
 

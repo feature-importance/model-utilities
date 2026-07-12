@@ -85,7 +85,7 @@ class ManualLR(TorchScheduler):
                     schedulers.append(_parse_schedule(s)._scheduler_builder)
 
         if len(schedulers) == len(milestones):
-            schedulers = schedulers.append(schedulers[-1])
+            schedulers.append(schedulers[-1])
 
         return cls(milestones=milestones, schedulers=schedulers)
 
