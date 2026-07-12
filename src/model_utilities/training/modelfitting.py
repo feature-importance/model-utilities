@@ -184,12 +184,14 @@ def fit_model(model, criterion, opt, trainloader, valloader, epochs=1000,
     if trainloader is not None:
         history = trial.run(epochs, verbose=verbose)
         # also just save the plain final model weights
-        torch.save(model.state_dict(), model_file)
+        if model_file is not None:
+            torch.save(model.state_dict(), model_file)
     metrics = trial.evaluate(data_key=torchbearer.TEST_DATA)
 
-    save_model_info(model, os.path.dirname(model_file),
-                    os.path.basename(model_file).replace(".pt", "") +
-                    "-info.txt")
+    if model_file is not None:
+        save_model_info(model, os.path.dirname(model_file),
+                        os.path.basename(model_file).replace(".pt", "") +
+                        "-info.txt")
 
     return trial, history, metrics
 
