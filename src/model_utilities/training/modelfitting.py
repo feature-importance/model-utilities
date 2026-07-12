@@ -128,9 +128,10 @@ def fit_model(model, criterion, opt, trainloader, valloader, epochs=1000,
 
         cb.extend([tboard, tboardtext, write_params])
 
-    # irrespective of tensorboard we log to csv, etc
-    log = model_file.replace('.pt', '-log.csv')
-    cb.append(CSVLogger(log))
+    if model_file is not None:
+        # irrespective of tensorboard we log to csv, etc
+        log = model_file.replace('.pt', '-log.csv')
+        cb.append(CSVLogger(log))
 
     if extra_callbacks is not None:
         if not isinstance(extra_callbacks, (list, tuple)):
