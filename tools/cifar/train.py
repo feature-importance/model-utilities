@@ -8,14 +8,12 @@ import sys
 import torch
 import torch.nn as nn
 import torchvision
+from model_utilities.datasets import cifar10_loaders, cifar100_loaders
 import model_utilities.models.cifar_resnet as cifar_resnet
 from model_utilities.training.modelfitting import fit_model, set_seed, \
     get_device
 from model_utilities.training.schedule import parse_learning_rate_arg
 from model_utilities.training.utils import save_args
-from model_utilities.transforms.cifar_presets import \
-    ImageClassificationTraining, ImageClassificationEval
-from torchvision.datasets import CIFAR10, CIFAR100
 
 
 def get_args_parser(add_help=True):
@@ -42,6 +40,10 @@ def get_args_parser(add_help=True):
 
     parser.add_argument("-b", "--batch-size", default=32, type=int,
                         help="images per batch")
+    parser.add_argument("--train-sample-cap", default=None, type=int,
+                        help="optional class-balanced cap for training samples")
+    parser.add_argument("--eval-sample-cap", default=None, type=int,
+                        help="optional class-balanced cap for validation samples")
     parser.add_argument("--epochs", default=90, type=int,
                         metavar="N", help="number of total epochs to run")
     parser.add_argument('--resume', type=str, default=None)
@@ -112,25 +114,14 @@ def main():
                         filter(lambda p: p.requires_grad, model.parameters()),
                         init_lr, args.momentum, args.weight_decay)
 
-    if args.dataset == 'cifar10':
-        train_data = CIFAR10(root=args.data_dir, train=True, download=True,
-                             transform=ImageClassificationTraining())
-        val_data = CIFAR10(root=args.data_dir, train=False, download=True,
-                           transform=ImageClassificationEval())
-    else:
-        train_data = CIFAR100(root=args.data_dir, train=True, download=True,
-                              transform=ImageClassificationTraining())
-        val_data = CIFAR100(root=args.data_dir, train=False, download=True,
-                            transform=ImageClassificationEval())
-
-    train_data_loader = torch.utils.data.DataLoader(train_data,
-                                                    pin_memory=True,
-                                                    num_workers=args.workers,
-                                                    batch_size=args.batch_size)
-    val_data_loader = torch.utils.data.DataLoader(val_data,
-                                                  pin_memory=True,
-                                                  num_workers=args.workers,
-                                                  batch_size=args.batch_size)
+    loaders = cifar10_loaders if args.dataset == 'cifar10' else cifar100_loaders
+    train_data_loader, val_data_loader = loaders(
+        root=args.data_dir,
+        batch_size=args.batch_size,
+        train_sample_cap=args.train_sample_cap,
+        eval_sample_cap=args.eval_sample_cap,
+        num_workers=args.workers,
+    )
 
     run_id = f"{args.model}-{args.dataset}-seed_{args.seed}"
 
