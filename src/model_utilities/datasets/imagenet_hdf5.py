@@ -32,18 +32,55 @@ class ImageNetHDF5(VisionDataset):
                     newdest.append((dest, i))
             self.dest = newdest
 
+    def load(self, file, i):
+        with h5py.File(os.path.join(self.root, file + '.hdf5'), 'r') as f:
+            return f['data'][i]
+
+    def __getitem__(self, index):
+        dest, i = self.dest[index]
+
+        sample = self.load(dest, i)
+
+        sample = Image.open(io.BytesIO(sample))
+        sample = sample.convert('RGB')
+
+        if self.transform is not None:
+            sample = self.transform(sample)
+
+        return sample, self.targets[dest]
+
+    def __len__(self):
+        return len(self.dest)
+
+
+# this version keeps the file handles open - but if the sharding is one per class
+# you'll likely run out of file handles. This is mitigated by the max_open_files
+# parameter.
+class ImageNetHDF5Handles(ImageNetHDF5):
+    def __init__(self, root, max_open_files=900, transform=None, classes=None):
+        super().__init__(root, transform=transform, classes=classes)
+
         self._open_files = {}
         self._owner_pid = None
+        self.max_open_files = max_open_files
 
-    def _get_dataset(self, name):
+    def _ensure_process(self):
         pid = os.getpid()
 
         if self._owner_pid != pid:
             self.close()
             self._owner_pid = pid
 
-        if name not in self._open_files:
-            handle = h5py.File(os.path.join(self.root, name + ".hdf5"),"r")
+    def load(self, name, index):
+        self._ensure_process()
+
+        if name in self._open_files:
+            return self._open_files[name][1][index]
+
+        path = os.path.join(self.root, name + ".hdf5")
+
+        if len(self._open_files) < self.max_open_files:
+            handle = h5py.File(path, "r")
             try:
                 dataset = handle["data"]
             except Exception:
@@ -51,11 +88,10 @@ class ImageNetHDF5(VisionDataset):
                 raise
 
             self._open_files[name] = (handle, dataset)
+            return dataset[index]
 
-        return self._open_files[name][1]
-
-    def load(self, name, index):
-        return self._get_dataset(name)[index]
+        with h5py.File(path, "r") as handle:
+            return handle["data"][index]
 
     def close(self):
         handles = getattr(self, "_open_files", {})
@@ -82,23 +118,3 @@ class ImageNetHDF5(VisionDataset):
         state["_open_files"] = {}
         state["_owner_pid"] = None
         return state
-
-    # def load(self, file, i):
-    #     with h5py.File(os.path.join(self.root, file + '.hdf5'), 'r') as f:
-    #         return f['data'][i]
-
-    def __getitem__(self, index):
-        dest, i = self.dest[index]
-
-        sample = self.load(dest, i)
-
-        sample = Image.open(io.BytesIO(sample))
-        sample = sample.convert('RGB')
-
-        if self.transform is not None:
-            sample = self.transform(sample)
-
-        return sample, self.targets[dest]
-
-    def __len__(self):
-        return len(self.dest)

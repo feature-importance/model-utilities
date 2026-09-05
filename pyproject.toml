@@ -32,6 +32,10 @@ classifiers = [
 test = [
     "pytest>=8.0.0",
 ]
+imagenet = [
+    "webdataset>=1.0.0",
+    "wids>=0.1.11",
+]
 
 [project.urls]
 Homepage = "https://github.com/feature-importance/model-utilities"
