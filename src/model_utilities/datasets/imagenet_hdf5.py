@@ -9,7 +9,7 @@ from torchvision.datasets import VisionDataset
 
 class ImageNetHDF5(VisionDataset):
     def __init__(self, root, cache_size=None, transform=None, classes=None, lazy=True):
-        super(ImageNetHDF5, self).__init__(root, transform=transform, target_transform=None)
+        super().__init__(root, transform=transform, target_transform=None)
 
         if cache_size is not None:
             print("caching has been removed and is no longer supported.")
