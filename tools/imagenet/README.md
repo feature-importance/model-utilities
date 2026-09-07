@@ -64,3 +64,34 @@ throughput from Linux page-cache throughput. WIDS defaults to direct reads from
 the shared path (its small lock files and symlinks live under `/tmp`, not beside
 the shared shards); pass `--wids-cache-dir "$TMPDIR/wids"` only when intentionally
 benchmarking full node-local staging.
+
+## ImageNet-50 and ImageNet-100 indexed subsets
+
+The predefined subsets are map-style views over the same tar shards; no image
+data is copied or rewritten:
+
+```python
+from model_utilities.datasets import ImageNet50WIDS, ImageNet100WIDS
+
+train100 = ImageNet100WIDS(
+    "/shared/imagenet/webdataset",
+    transform=train_transform,
+)
+train50 = ImageNet50WIDS(
+    "/shared/imagenet/webdataset",
+    transform=train_transform,
+)
+```
+
+The first construction scans tar headers and the small `.cls` members, without
+reading or decoding image payloads. It writes a compact full-target index plus a
+subset index. ImageNet-50 and ImageNet-100 share the full-target index, and later
+runs load the cached arrays directly. A file lock prevents distributed ranks from
+building the same index concurrently.
+
+By default these indices are written beside `dataset.json` and the tar shards.
+Once generated on a node with write access, compute nodes can load them from a
+read-only mount without creating a lock file. If the dataset directory is not
+writable and the indices do not yet exist, construction falls back to node-local
+`/tmp`. This is independent of `cache_dir`, which controls whether WIDS stages the
+much larger tar shards themselves.

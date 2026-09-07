@@ -8,3 +8,8 @@ from .imagenet_sharded import (
     make_wids_sampler,
 )
 from .imagenet_subsets_hdf5 import ImageNet50HDF5, ImageNet100HDF5
+from .imagenet_subsets_wids import (
+    ImageNet50WIDS,
+    ImageNet100WIDS,
+    ImageNetSubsetWIDS,
+)
