@@ -18,7 +18,10 @@ def parse_args():
         help="Output directory for tar shards shared by WIDS and WebDataset",
     )
     parser.add_argument("--num-shards", type=int, default=256)
-    parser.add_argument("--seed", type=int, default=0)
+    parser.add_argument(
+        "--seed", type=int, default=0,
+        help="Seed for shard assignment and within-shard shuffling (default: 0)",
+    )
     parser.add_argument("--name", default="imagenet-train")
     args = parser.parse_args()
     if args.hdf5_output is None and args.webdataset_output is None:
@@ -31,7 +34,8 @@ def main():
 
     def progress(phase, completed, total):
         if completed == total or completed == 1 or completed % 25 == 0:
-            print(f"[{phase}] {completed}/{total} classes", flush=True)
+            unit = "shards" if phase.endswith("shuffling") else "classes"
+            print(f"[{phase}] {completed}/{total} {unit}", flush=True)
 
     result = repack_imagenet_hdf5(
         args.input,

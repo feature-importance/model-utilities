@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from collections import defaultdict
+import hashlib
 import io
 import json
 from pathlib import Path
@@ -19,6 +20,7 @@ from .imagenet_sharded import HDF5_MANIFEST, WIDS_MANIFEST
 
 HDF5_FORMAT = "model-utilities.sharded-hdf5"
 HDF5_VERSION = 1
+SHUFFLE_ALGORITHM = "independent-per-shard-python-random-v1"
 
 
 def _empty_output_directory(path):
@@ -65,6 +67,81 @@ def _assignment(indices, class_index, num_shards, seed):
     offset = rng.randrange(num_shards)
     for position, local_index in enumerate(shuffled):
         yield (offset + position) % num_shards, local_index
+
+
+def _sample_order(count, seed, shard_index):
+    shard_seed = int.from_bytes(
+        hashlib.sha256(f"{seed}:{shard_index}".encode("ascii")).digest(), "big"
+    )
+    order = list(range(count))
+    random.Random(shard_seed).shuffle(order)
+    return order
+
+
+def _shuffle_hdf5(path, count, seed, shard_index):
+    temporary = path.with_suffix(".hdf5.partial")
+    try:
+        with h5py.File(path, "r") as original:
+            order = np.asarray(_sample_order(count, seed, shard_index), dtype=np.int64)
+            old_offsets = original["offsets"][:]
+            targets = original["targets"][:][order]
+            offsets = np.zeros(count + 1, dtype=np.uint64)
+            offsets[1:] = np.cumsum(np.diff(old_offsets)[order], dtype=np.uint64)
+            expected_digest = hashlib.sha256()
+            with h5py.File(temporary, "w") as shuffled:
+                shuffled.create_dataset("offsets", data=offsets, dtype="u8")
+                shuffled.create_dataset("targets", data=targets, dtype="i4")
+                data = shuffled.create_dataset("data", shape=original["data"].shape, dtype="u1")
+                for position, old_position in enumerate(order):
+                    start, end = int(old_offsets[old_position]), int(old_offsets[old_position + 1])
+                    encoded = original["data"][start:end]
+                    data[int(offsets[position]):int(offsets[position + 1])] = encoded
+                    expected_digest.update(encoded.tobytes())
+        with h5py.File(temporary, "r") as shuffled:
+            if (
+                not np.array_equal(shuffled["targets"][:], targets)
+                or not np.array_equal(shuffled["offsets"][:], offsets)
+            ):
+                raise ValueError(f"Shuffled HDF5 metadata verification failed: {path}")
+            actual_digest = hashlib.sha256()
+            data = shuffled["data"]
+            for start in range(0, len(data), 4 * 1024 * 1024):
+                actual_digest.update(data[start:start + 4 * 1024 * 1024].tobytes())
+            if actual_digest.digest() != expected_digest.digest():
+                raise ValueError(f"Shuffled HDF5 payload verification failed: {path}")
+        temporary.replace(path)
+    finally:
+        temporary.unlink(missing_ok=True)
+
+
+def _shuffle_tar(path, count, seed, shard_index):
+    temporary = path.with_suffix(".tar.partial")
+    try:
+        with tarfile.open(path, mode="r:") as original:
+            members = original.getmembers()
+            if len(members) != 2 * count:
+                raise ValueError(f"Expected one image/label pair per sample in {path}")
+            digests = {}
+            with tarfile.open(temporary, mode="w") as shuffled:
+                for position in _sample_order(count, seed, shard_index):
+                    # The writer emits adjacent image/label pairs; move them together.
+                    for member in members[2 * position:2 * position + 2]:
+                        with original.extractfile(member) as stream:
+                            encoded = stream.read()
+                        digests[member.name] = hashlib.sha256(encoded).digest()
+                        shuffled.addfile(member, io.BytesIO(encoded))
+        with tarfile.open(temporary, mode="r:") as shuffled:
+            members = shuffled.getmembers()
+            if [member.name for member in members] != list(digests):
+                raise ValueError(f"Shuffled tar member verification failed: {path}")
+            for member in members:
+                with shuffled.extractfile(member) as stream:
+                    digest = hashlib.sha256(stream.read()).digest()
+                if digest != digests[member.name]:
+                    raise ValueError(f"Shuffled tar payload verification failed: {path}: {member.name}")
+        temporary.replace(path)
+    finally:
+        temporary.unlink(missing_ok=True)
 
 
 def _check_file_limit(num_shards):
@@ -160,11 +237,17 @@ def _write_sharded_hdf5(
         for handle in handles:
             handle.close()
 
+    for index, (path, count) in enumerate(zip(paths, counts)):
+        _shuffle_hdf5(path, int(count), seed, index)
+        if progress is not None:
+            progress("hdf5-shuffling", index + 1, num_shards)
+
     manifest = {
         "format": HDF5_FORMAT,
         "version": HDF5_VERSION,
         "num_samples": int(counts.sum()),
         "classes": classes,
+        "shuffle": {"algorithm": SHUFFLE_ALGORITHM, "seed": seed},
         "shards": [
             {
                 "file": path.name,
@@ -218,11 +301,17 @@ def _write_webdataset(
         for archive in archives:
             archive.close()
 
+    for index, (path, count) in enumerate(zip(paths, counts)):
+        _shuffle_tar(path, int(count), seed, index)
+        if progress is not None:
+            progress("webdataset-shuffling", index + 1, num_shards)
+
     manifest = {
         "wids_version": 1,
         "name": name,
         "num_samples": int(counts.sum()),
         "classes": classes,
+        "shuffle": {"algorithm": SHUFFLE_ALGORITHM, "seed": seed},
         "shardlist": [
             {
                 "url": path.name,
@@ -246,11 +335,17 @@ def repack_imagenet_hdf5(
     name="imagenet-train",
     progress=None,
 ):
-    """Create mixed-class HDF5 shards and/or shared WIDS/WebDataset tar shards."""
+    """Create class-balanced shards with independently shuffled sample order.
+
+    The seed controls both shard assignment and within-shard shuffling, and is
+    recorded in each output manifest. Shuffling is verified before publication.
+    """
     if hdf5_output is None and webdataset_output is None:
         raise ValueError("At least one output directory is required")
     if not isinstance(num_shards, int) or num_shards < 1:
         raise ValueError("num_shards must be a positive integer")
+    if not isinstance(seed, int):
+        raise ValueError("seed must be an integer")
     _check_file_limit(num_shards)
 
     source = Path(source)

@@ -24,55 +24,28 @@ conda run -n feature-importance python tools/imagenet/repack.py \
   --input /shared/imagenet/hdf5-by-class \
   --hdf5-output /shared/imagenet/hdf5-sharded \
   --webdataset-output /shared/imagenet/webdataset \
-  --num-shards 256
+  --num-shards 256 \
+  --seed 0
 ```
 
 The output directories must be empty. The conversion balances every class across
-the shards. HDF5 conversion reads the input twice: once to size the flat byte
-arrays and once to write them. For streaming, use at least as many shards as the
+the shards and independently shuffles sample order within each shard. `--seed`
+(default `0`) controls both assignment and ordering and is recorded in each
+manifest. The two output formats use the same sample order for a given seed and
+shard count. Image bytes and labels remain unchanged; tar image/label pairs stay
+together. This avoids class-ordered windows when using locality-aware sampling.
+
+Source reads remain class-by-class. HDF5 conversion reads the input twice: once
+to size the flat byte arrays and once to write them. An internal per-shard pass
+then shuffles and verifies the generated output before publishing its manifest.
+It uses bounded payload memory and temporary disk space for one extra shard.
+Use fresh output/cache paths when repacking; integer sample indices will change.
+
+For streaming, use at least as many shards as the
 total number of distributed ranks times DataLoader workers; several times that
 number gives better shard shuffling. The default 256 is a sensible starting point
 for common cluster jobs and remains comfortably below a 1024-file descriptor
 limit.
-
-## Shuffle existing training shards
-
-To test within-shard ordering without rerunning the HDF5 conversion:
-
-```bash
-conda run -n feature-importance python tools/imagenet/shuffle_shards.py \
-  --input /shared/original/imagenet_webdataset/train \
-  --output /shared/shuffled/imagenet_webdataset/train \
-  --seed 0
-```
-
-The destination must not exist and must be outside the input directory. This
-reads the flat `dataset.json` and uncompressed local tar shards produced by the
-repacker. Each shard's samples are independently shuffled using the seed and its
-manifest position. Shard membership, shard-list order, sample keys, class mapping
-and all encoded component bytes are preserved. Components belonging to one sample
-remain together. The output is read back and every payload checked with SHA-256;
-no image decoding or recompression is performed. Only tar-header metadata and one
-encoded component are needed in memory at a time. The output needs roughly as much
-disk space as the input, which remains untouched.
-
-A new manifest is written after all shards are verified. Old tar checksums and
-cached WIDS/subset indexes are not copied. A failed run may leave completed shards
-but no manifest; inspect that output and choose a fresh destination before retrying.
-
-Leave validation untouched. For the training CLI's root-directory convention,
-the new layout can reuse the original validation directory via a symlink:
-
-```bash
-ln -s /shared/original/imagenet_webdataset/val /shared/shuffled/imagenet_webdataset/val
-```
-
-Set `dataset.directory` to `/shared/shuffled`, retain `storage: wids` and
-`wids_sampler: chunked`, and use a fresh `wids_cache_dir`. Integer training indices
-now refer to different samples; use stable sample keys when comparing identities.
-This utility does not change the original repacker. Compare a short matched-global-
-batch single-/multi-GPU run against the globally shuffled baseline before adopting
-this layout for long training runs.
 
 ## Benchmark
 

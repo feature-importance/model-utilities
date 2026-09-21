@@ -27,6 +27,7 @@ from model_utilities.datasets.imagenet_subsets_hdf5 import (
     IMAGENET_100_SUBSET,
 )
 import model_utilities.datasets.imagenet_subsets_wids as subsets_wids
+import model_utilities.datasets.imagenet_repack as repack
 
 
 def encoded_image(colour, image_format):
@@ -198,6 +199,118 @@ def test_repacker_refuses_nonempty_output(repacked_dataset):
     source, hdf5_output, _, _, _ = repacked_dataset
     with pytest.raises(FileExistsError):
         repack_imagenet_hdf5(source, hdf5_output=hdf5_output, num_shards=2)
+
+
+def test_repacking_shuffles_reproducibly_in_both_formats(tmp_path):
+    source = tmp_path / "source"
+    source.mkdir()
+    classes = [f"n{index:08d}" for index in range(4)]
+    destinations = []
+    originals = {}
+    for target, class_name in enumerate(classes):
+        with h5py.File(source / f"{class_name}.hdf5", "w") as handle:
+            data = handle.create_dataset("data", (16,), dtype=h5py.vlen_dtype(np.dtype("uint8")))
+            for index in range(16):
+                value = encoded_image((target * 50, index * 10, 30), "PNG")
+                data[index] = np.frombuffer(value, dtype="uint8")
+                destinations.append((class_name, index))
+                originals[f"{class_name}_{index:08d}"] = (value, target)
+    with open(source / "dest.p", "wb") as stream:
+        pickle.dump(destinations, stream)
+
+    orders = {}
+    for label, kwargs in [("default", {}), ("zero", {"seed": 0}), ("other", {"seed": 1})]:
+        root = tmp_path / label
+        phases = []
+        manifests = repack_imagenet_hdf5(
+            source, hdf5_output=root / "hdf5", webdataset_output=root / "tar", num_shards=2,
+            progress=lambda phase, done, total: phases.append((phase, done, total)), **kwargs,
+        )
+        seed = kwargs.get("seed", 0)
+        assert ("hdf5-shuffling", 2, 2) in phases
+        assert ("webdataset-shuffling", 2, 2) in phases
+        assert manifests["hdf5"]["shuffle"]["seed"] == seed
+        assert manifests["webdataset"]["shuffle"]["seed"] == seed
+        hdf5 = ImageNetShardedHDF5(root / "hdf5")
+        position = 0
+        orders[label] = []
+        for shard_index, shard in enumerate(manifests["webdataset"]["shardlist"]):
+            path = root / "tar" / shard["url"]
+            with tarfile.open(path, "r:") as archive:
+                members = archive.getmembers()
+                keys, targets = [], []
+                for index in range(0, len(members), 2):
+                    image, target = members[index:index + 2]
+                    key = image.name.rsplit(".", 1)[0]
+                    assert target.name == key + ".cls"
+                    value = archive.extractfile(image).read()
+                    target_value = int(archive.extractfile(target).read())
+                    assert (value, target_value) == originals[key]
+                    assert hdf5._load_encoded(position) == (value, target_value)
+                    keys.append(key)
+                    targets.append(target_value)
+                    position += 1
+            expected_keys = {
+                f"{class_name}_{index:08d}"
+                for target, class_name in enumerate(classes)
+                for assigned, index in repack._assignment(range(16), target, 2, seed)
+                if assigned == shard_index
+            }
+            assert len(keys) == len(set(keys)) == shard["nsamples"]
+            assert set(keys) == expected_keys
+            assert targets != sorted(targets)
+            assert [targets.count(target) for target in range(4)] == [8] * 4
+            assert path.stat().st_size == shard["filesize"]
+            orders[label].append(keys)
+        hdf5.close()
+        assert position == len(originals)
+        assert not list(root.rglob("*.partial"))
+    assert orders["default"] == orders["zero"]
+    assert orders["default"] != orders["other"]
+    for index in range(2):
+        name = f"train-{index:05d}.tar"
+        assert (tmp_path / "default/tar" / name).read_bytes() == (tmp_path / "zero/tar" / name).read_bytes()
+
+
+def test_shard_shuffle_seeds_are_independent():
+    first = repack._sample_order(100, 0, 0)
+    assert sorted(first) == list(range(100))
+    assert first == repack._sample_order(100, 0, 0)
+    assert first != repack._sample_order(100, 0, 1)
+    assert first != repack._sample_order(100, 1, 0)
+    assert repack._sample_order(0, 0, 0) == []
+
+
+@pytest.mark.parametrize("output_kind,helper,manifest_name", [
+    ("hdf5_output", "_shuffle_hdf5", "manifest.json"),
+    ("webdataset_output", "_shuffle_tar", "dataset.json"),
+])
+def test_shuffle_failure_does_not_publish_manifest(repacked_dataset, tmp_path, monkeypatch,
+                                                  output_kind, helper, manifest_name):
+    source, _, _, _, _ = repacked_dataset
+    output = tmp_path / "failed"
+
+    def fail(*args):
+        raise ValueError("shuffle verification failed")
+
+    monkeypatch.setattr(repack, helper, fail)
+    with pytest.raises(ValueError, match="verification failed"):
+        repack_imagenet_hdf5(source, num_shards=2, **{output_kind: output})
+    assert not (output / manifest_name).exists()
+
+
+@pytest.mark.parametrize("seed_args,expected_seed", [([], 0), (["--seed", "42"], 42)])
+def test_repack_cli_shuffle_seed(repacked_dataset, tmp_path, seed_args, expected_seed):
+    source, _, _, _, _ = repacked_dataset
+    script = Path(__file__).resolve().parents[3] / "tools/imagenet/repack.py"
+    output = tmp_path / "cli"
+    completed = subprocess.run([
+        sys.executable, str(script), "--input", str(source),
+        "--webdataset-output", str(output), "--num-shards", "2", *seed_args,
+    ], capture_output=True, text=True, check=True)
+    assert "[webdataset-shuffling] 2/2 shards" in completed.stdout
+    metadata = json.loads((output / "dataset.json").read_text())
+    assert metadata["shuffle"]["seed"] == expected_seed
 
 
 def test_imagenet_wids_subsets_reuse_existing_shards(subset_webdataset):
