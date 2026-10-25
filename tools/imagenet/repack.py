@@ -19,6 +19,10 @@ def parse_args():
     )
     parser.add_argument("--num-shards", type=int, default=256)
     parser.add_argument(
+        "--shard-prefix", default="train",
+        help="Filename prefix for both formats, e.g. val -> val-00000.tar/.hdf5 (default: train)",
+    )
+    parser.add_argument(
         "--seed", type=int, default=0,
         help="Seed for shard assignment and within-shard shuffling (default: 0)",
     )
@@ -44,6 +48,7 @@ def main():
         num_shards=args.num_shards,
         seed=args.seed,
         name=args.name,
+        shard_prefix=args.shard_prefix,
         progress=progress,
     )
     summary = {

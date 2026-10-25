@@ -173,6 +173,32 @@ def test_wids_reads_tar_shards_by_index(repacked_dataset):
     dataset.close()
 
 
+def _write_cache_test_split(root, colour, target, count=1):
+    root.mkdir(parents=True, exist_ok=True)
+    path = root / "train-00000.tar"
+    with tarfile.open(path, "w") as archive:
+        for index in range(count):
+            add_tar_member(archive, f"sample-{index}.png", encoded_image(colour, "PNG"))
+            add_tar_member(archive, f"sample-{index}.cls", str(target).encode("ascii"))
+    (root / "dataset.json").write_text(json.dumps({
+        "wids_version": 1, "classes": ["a", "b"],
+        "shardlist": [{"url": path.name, "nsamples": count, "filesize": path.stat().st_size}],
+    }))
+
+
+def test_wids_shared_cache_keeps_train_and_validation_separate(tmp_path):
+    pytest.importorskip("wids")
+    train, val, cache = tmp_path / "train", tmp_path / "val", tmp_path / "cache"
+    _write_cache_test_split(train, (255, 0, 0), 0, count=2)
+    _write_cache_test_split(val, (0, 0, 255), 1)
+    with ImageNetWIDS(train, cache_dir=cache) as training, ImageNetWIDS(val, cache_dir=cache) as validation:
+        assert training[0][1] == 0
+        image, target = validation[0]
+        assert len(validation) == 1
+        assert target == 1
+        assert image.getpixel((0, 0)) == (0, 0, 255)
+
+
 def test_webdataset_streams_tar_shards(repacked_dataset):
     pytest.importorskip("webdataset")
     _, _, webdataset_output, classes, _ = repacked_dataset
@@ -199,6 +225,67 @@ def test_repacker_refuses_nonempty_output(repacked_dataset):
     source, hdf5_output, _, _, _ = repacked_dataset
     with pytest.raises(FileExistsError):
         repack_imagenet_hdf5(source, hdf5_output=hdf5_output, num_shards=2)
+
+
+@pytest.mark.parametrize("prefix", ["val", "imagenet-val-v2"])
+def test_repacker_shard_prefix_updates_both_manifests(repacked_dataset, tmp_path, prefix):
+    source, _, _, classes, _ = repacked_dataset
+    hdf5_root, tar_root = tmp_path / "prefixed-hdf5", tmp_path / "prefixed-tar"
+    results = repack_imagenet_hdf5(
+        source, hdf5_output=hdf5_root, webdataset_output=tar_root,
+        num_shards=2, shard_prefix=prefix, name="independent-dataset-name",
+    )
+    for kind, root, suffix, manifest_file, shard_list, filename_key in [
+        ("hdf5", hdf5_root, "hdf5", "manifest.json", "shards", "file"),
+        ("webdataset", tar_root, "tar", "dataset.json", "shardlist", "url"),
+    ]:
+        expected = [f"{prefix}-{index:05d}.{suffix}" for index in range(2)]
+        manifest = json.loads((root / manifest_file).read_text())
+        assert manifest == results[kind]
+        assert [shard[filename_key] for shard in manifest[shard_list]] == expected
+        assert sorted(path.name for path in root.glob(f"*.{suffix}")) == expected
+    assert results["webdataset"]["name"] == "independent-dataset-name"
+    with ImageNetShardedHDF5(hdf5_root) as dataset:
+        assert_decoded_dataset(dataset, classes)
+
+
+@pytest.mark.parametrize("prefix", ["", "../val", "/val", "val/sub", "val\\sub", "val\n", None])
+def test_repacker_rejects_invalid_shard_prefix_before_writing(tmp_path, prefix):
+    output = tmp_path / "output"
+    with pytest.raises(ValueError, match="shard_prefix"):
+        repack_imagenet_hdf5(tmp_path / "source", webdataset_output=output, shard_prefix=prefix)
+    assert not output.exists()
+
+
+def test_repack_cli_shard_prefix(repacked_dataset, tmp_path):
+    source, _, _, _, _ = repacked_dataset
+    script = Path(__file__).resolve().parents[3] / "tools/imagenet/repack.py"
+    hdf5_root, tar_root = tmp_path / "cli-hdf5", tmp_path / "cli-tar"
+    subprocess.run([
+        sys.executable, str(script), "--input", str(source),
+        "--hdf5-output", str(hdf5_root), "--webdataset-output", str(tar_root),
+        "--num-shards", "2", "--shard-prefix", "val",
+    ], capture_output=True, text=True, check=True)
+    hdf5 = json.loads((hdf5_root / "manifest.json").read_text())
+    tar = json.loads((tar_root / "dataset.json").read_text())
+    assert [shard["file"] for shard in hdf5["shards"]] == ["val-00000.hdf5", "val-00001.hdf5"]
+    assert [shard["url"] for shard in tar["shardlist"]] == ["val-00000.tar", "val-00001.tar"]
+
+
+def test_wids_distinct_shard_prefixes_can_share_cache(repacked_dataset, tmp_path):
+    pytest.importorskip("wids")
+    source, _, train_root, _, _ = repacked_dataset
+    val_root, cache = tmp_path / "val", tmp_path / "shared-cache"
+    repack_imagenet_hdf5(source, webdataset_output=val_root, num_shards=2, seed=19, shard_prefix="val")
+    with ImageNetWIDS(train_root, cache_dir=cache) as training:
+        for index in range(len(training)):
+            training[index]
+        with ImageNetWIDS(val_root) as direct, ImageNetWIDS(val_root, cache_dir=cache) as cached:
+            for index in range(len(direct)):
+                expected_image, expected_target = direct[index]
+                actual_image, actual_target = cached[index]
+                assert actual_target == expected_target
+                assert actual_image.tobytes() == expected_image.tobytes()
 
 
 def test_repacking_shuffles_reproducibly_in_both_formats(tmp_path):

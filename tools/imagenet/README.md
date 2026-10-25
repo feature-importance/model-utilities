@@ -25,6 +25,7 @@ conda run -n feature-importance python tools/imagenet/repack.py \
   --hdf5-output /shared/imagenet/hdf5-sharded \
   --webdataset-output /shared/imagenet/webdataset \
   --num-shards 256 \
+  --shard-prefix train \
   --seed 0
 ```
 
@@ -40,6 +41,18 @@ to size the flat byte arrays and once to write them. An internal per-shard pass
 then shuffles and verifies the generated output before publishing its manifest.
 It uses bounded payload memory and temporary disk space for one extra shard.
 Use fresh output/cache paths when repacking; integer sample indices will change.
+
+`--shard-prefix` controls shard filenames in both formats and defaults to `train`:
+`train-00000.tar`, `train-00000.hdf5`, etc. Use `--shard-prefix val` when repacking
+validation, producing `val-00000.tar` and `val-00000.hdf5`. Manifest entries are
+updated automatically. Prefixes must start with an ASCII letter or digit and
+contain only letters, digits, dots, underscores or hyphens, not a directory path.
+The separate `--name` argument changes only the WebDataset manifest's dataset name.
+
+Use distinct prefixes for splits/datasets that share a WIDS local cache: WIDS's
+explicit `cache_dir` implementation can cache by basename. Separate source
+directories alone do not prevent collisions. Prefixes are not a replacement for
+using a fresh cache when regenerating a dataset with the same filenames.
 
 For streaming, use at least as many shards as the
 total number of distributed ranks times DataLoader workers; several times that

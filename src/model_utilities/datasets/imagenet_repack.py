@@ -9,6 +9,7 @@ import json
 from pathlib import Path
 import pickle
 import random
+import re
 import tarfile
 
 import h5py
@@ -184,7 +185,7 @@ def _write_json(path, value):
 
 
 def _write_sharded_hdf5(
-    source, output, classes, by_class, num_shards, seed, progress=None
+    source, output, classes, by_class, num_shards, seed, shard_prefix, progress=None
 ):
     counts = np.zeros(num_shards, dtype=np.int64)
     byte_counts = np.zeros(num_shards, dtype=np.int64)
@@ -202,7 +203,7 @@ def _write_sharded_hdf5(
         if progress is not None:
             progress("hdf5-sizing", target + 1, len(classes))
 
-    paths = [output / f"train-{index:05d}.hdf5" for index in range(num_shards)]
+    paths = [output / f"{shard_prefix}-{index:05d}.hdf5" for index in range(num_shards)]
     handles = []
     try:
         for path, count, byte_count in zip(paths, counts, byte_counts):
@@ -273,9 +274,9 @@ def _tar_member(archive, name, payload):
 
 
 def _write_webdataset(
-    source, output, classes, by_class, num_shards, seed, name, progress=None
+    source, output, classes, by_class, num_shards, seed, name, shard_prefix, progress=None
 ):
-    paths = [output / f"train-{index:05d}.tar" for index in range(num_shards)]
+    paths = [output / f"{shard_prefix}-{index:05d}.tar" for index in range(num_shards)]
     counts = np.zeros(num_shards, dtype=np.int64)
     archives = []
     try:
@@ -333,12 +334,14 @@ def repack_imagenet_hdf5(
     num_shards=256,
     seed=0,
     name="imagenet-train",
+    shard_prefix="train",
     progress=None,
 ):
     """Create class-balanced shards with independently shuffled sample order.
 
     The seed controls both shard assignment and within-shard shuffling, and is
     recorded in each output manifest. Shuffling is verified before publication.
+    Shard filenames use <shard_prefix>-<five-digit index> plus the format suffix.
     """
     if hdf5_output is None and webdataset_output is None:
         raise ValueError("At least one output directory is required")
@@ -346,6 +349,11 @@ def repack_imagenet_hdf5(
         raise ValueError("num_shards must be a positive integer")
     if not isinstance(seed, int):
         raise ValueError("seed must be an integer")
+    if not isinstance(shard_prefix, str) or re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9_.-]*", shard_prefix) is None:
+        raise ValueError(
+            "shard_prefix must start with a letter or digit and contain only "
+            "letters, digits, dots, underscores or hyphens (not a path)"
+        )
     _check_file_limit(num_shards)
 
     source = Path(source)
@@ -365,11 +373,11 @@ def repack_imagenet_hdf5(
     if hdf5_output is not None:
         output = _empty_output_directory(hdf5_output)
         results["hdf5"] = _write_sharded_hdf5(
-            source, output, classes, by_class, num_shards, seed, progress
+            source, output, classes, by_class, num_shards, seed, shard_prefix, progress
         )
     if webdataset_output is not None:
         output = _empty_output_directory(webdataset_output)
         results["webdataset"] = _write_webdataset(
-            source, output, classes, by_class, num_shards, seed, name, progress
+            source, output, classes, by_class, num_shards, seed, name, shard_prefix, progress
         )
     return results
