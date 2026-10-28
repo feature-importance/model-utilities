@@ -23,7 +23,7 @@ def _should_run(index, period, include_first):
     return (include_first and index == 0) or (index + 1) % period == 0
 
 
-class _Schedule:
+class IterationSchedule:
     def __init__(self, schedule):
         self.schedule = schedule
         self.is_predicate = callable(schedule)
@@ -162,7 +162,7 @@ class AtTrainingIterations(Callback):
 
     def __init__(self, schedule, callback):
         super().__init__()
-        self.schedule = _Schedule(schedule)
+        self.schedule = IterationSchedule(schedule)
         self.callback = callback
         self.iteration = 0
 
@@ -195,7 +195,7 @@ class AtTrainingEpochs(Callback):
 
     def __init__(self, schedule, callback):
         super().__init__()
-        self.schedule = _Schedule(schedule)
+        self.schedule = IterationSchedule(schedule)
         self.callback = callback
 
     def state_dict(self):
